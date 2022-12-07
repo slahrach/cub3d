@@ -34,6 +34,17 @@ void ft_check_missing_elements(t_config *config)
 		ft_handle_error("missing Element");
 }
 
+void	ft_free_matrix(char **matrix)
+{
+	int	i = 0;
+	while(matrix[i])
+	{
+		free(matrix[i]);
+		i++;
+	}
+	free(matrix);
+}
+
 int ft_get_matrix_size(char **matrix)
 {
 	int i = 0;
@@ -87,6 +98,7 @@ void	ft_check_elements(t_config *config, char *element)
 				ft_handle_error("Elements error : cant open texture file");
 			new = ft_texturenew(info[0], info[1]);
 			ft_addtexture_back(&(config->textures), new);
+			ft_free_matrix(expec_textures);
 			return ;
 		}
 		i++;
@@ -96,55 +108,100 @@ void	ft_check_elements(t_config *config, char *element)
 		rgb = ft_split(info[1], ',');
 		if (!ft_is_color(rgb))
 			ft_handle_error("Elements error : Not a valid color");
-		if (!ft_strcmp(info[0], "C"))
+		if (!ft_strcmp(info[0], "F"))
 		{
-			if (config->c_color)
-				ft_handle_error("Elements error : element already exist");
-			config->c_color = info[1];
+			if (config->f_color)
+				ft_handle_error("Elements error : f element already exist");
+			config->f_color = info[1];
+			ft_free_matrix(expec_textures);
+			ft_free_matrix(rgb);
+			return ;
 		}
 		else
 		{
-			if (config->f_color)
-				ft_handle_error("Elements error : element already exist");
-			config->f_color = info[1];
+			if (config->c_color)
+				ft_handle_error("Elements error : c element already exist");
+			config->c_color = info[1];
+			ft_free_matrix(expec_textures);
+			ft_free_matrix(rgb);
+			return ;
 		}
-		return ;
 	}
 	ft_handle_error("Elements error : Not a valid element");
 }
 
-void ft_parse_map(t_config *config, int fd)
+char *ft_parse_elements(t_config *config, int fd)
 {
 	int 	i;
-	int		valid;
+	char	*map;
 	char	*line;
 	char	*line_;
 
+	map = NULL;
 	line = gnl(fd);
 	if (!line)
 		ft_handle_error("error : empty map");
 	i = 0;
-	valid = 0;
 	while (line)
 	{
-		line_ = ft_substr(line, 0, ft_strlen(line) - 1);
-		free(line);
-		if (*line_ && i < 6)
+		if (ft_strlen(line) > 1 && i < 6)
 		{
-			printf("%d\n", i);
+			line_ = ft_substr(line, 0, ft_strlen(line) - 1);
+			free(line);
 			ft_check_elements(config, line_);
 			i++;
+		}
+		else if (ft_strlen(line) > 1 && i >= 6)
+		{
+			map = ft_strjoin(map, line);
+			(config->map_len)++;
 		}
 		if (i == 6)
 			ft_check_missing_elements(config);
 		line = gnl(fd);
 	}
+	return (map);
+}
+
+void	ft_check_1(char c, t_config *config)
+{
+	if (c != '1' && c != ' ')
+		ft_handle_error("Map must be surrounded by walls");
+}
+
+void	ft_check_chars(char c, t_config *config)
+{
+	if (c != '1' && c != ' ' && c != '0' && c != 'W' && c != 'N' && c != 'E' && c != 'S')
+		ft_handle_error("Imposter : unrecognized character");
+	if (c == 'W' || c == 'N' || c == 'E' || c == 'S')
+	{
+		if (config->orientation)
+			ft_handle_error("orientation character already exist");
+		config->orientation = c;
+	}
+}
+
+void	ft_parse_map(char *map, t_config *config)
+{
+	int	i;
+
+	i = 0;
+	config->map = ft_split(map, '\n');
+	free(map);
+	ft_strmapi_(config->map[0], ft_check_1, config);
+	ft_strmapi_(config->map[config->map_len - 1], ft_check_1, config);
+	while(config->map[i])
+	{
+		ft_strmapi_(config->map[i], ft_check_chars, config);
+		i++;
+	}
 }
 
 void ft_handle_scene_file(t_config *config, char *path)
 {
-	int	 file;
+	int		file;
 	char	*extension;
+	char	*map;
 
 	extension = ft_strchr(path, '.');
 	if (extension && !ft_strcmp(extension , ".cub"))
@@ -152,7 +209,10 @@ void ft_handle_scene_file(t_config *config, char *path)
 		file = open(path, O_RDONLY);
 		if (file < 0) 
 			ft_handle_error("Map error: file not found.");
-		ft_parse_map(config, file);
+		map = ft_parse_elements(config, file);
+		if (!map)
+			ft_handle_error("Map is Missing");
+		ft_parse_map(map, config);
 	}
 	else
 		ft_handle_error("Map error: has to be .cub");
@@ -165,22 +225,20 @@ void ft_init_config (t_config *config, int ac, char **av)
 	ft_handle_scene_file(config, av[1]);
 }
 
-t_config *ft_allocate(void)
+void	ft_init(t_config	*game)
 {
-	t_config	*game;
-
-	game = malloc(sizeof(t_config *));
 	game->textures = NULL;
-	game->c_color = NULL;
 	game->f_color = NULL;
-	return (game);
+	game->c_color = NULL;
+	game->map_len = 0;
+	game->orientation = 0;
 }
 
 int	main(int argc, char** argv)
 {
-	t_config *game;
+	t_config game;
 
-	game = ft_allocate();
-	ft_init_config(game, argc, argv);
+	ft_init(&game);
+	ft_init_config(&game, argc, argv);
 	//ft_raycast();
 }

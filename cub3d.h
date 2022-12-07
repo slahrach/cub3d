@@ -35,8 +35,11 @@ typedef struct s_texture
 typedef struct s_config
 {
 	t_texture	*textures;
-	char		*f_color;
 	char		*c_color;
+	char		*f_color;
+	int			map_len;
+	char		orientation;
+	char		**map;
 } t_config;
 
 void			ft_addtexture_back(t_texture **head, t_texture *new);
@@ -44,7 +47,9 @@ t_texture		*ft_texturenew(char *id, char *path);
 void			ft_addtexture_front(t_texture **head, t_texture *new);
 int				ft_texturesize(t_texture *lst);
 t_texture		*ft_texturelast(t_texture *lst);
-int		 	ft_atoi_(const char *str);
+int		 		ft_atoi_(const char *str);
+void			ft_strmapi_(char const *s, void (*f)(char, t_config *), t_config *config);
+void			ft_check_1(char c, t_config* config);
 // int			  ft_raycast (void);
 char			*get_next_line(int fd);
 

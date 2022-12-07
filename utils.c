@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/06 19:46:53 by slahrach          #+#    #+#             */
-/*   Updated: 2022/11/30 00:11:57 by slahrach         ###   ########.fr       */
+/*   Updated: 2022/12/05 16:53:13 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ t_texture	*ft_texturenew(char *id, char *path)
 	lst = (t_texture *)malloc(sizeof(*lst));
 	if (!lst)
 		return (NULL);
-	lst->id = id;
-	lst->path = path;
+	lst->id = ft_strdup(id);
+	lst->path = ft_strdup(path);
 	lst->next = NULL;
 	return (lst);
 }
@@ -95,4 +95,25 @@ int	ft_atoi_(const char *str)
 	if (*str)
 		return (0);
 	return ((sign * nbr));
+}
+
+void	ft_strmapi_(char const *s, void (*f)(char, t_config *), t_config *config)
+{
+	char			*str;
+	unsigned int	i;
+	size_t			l;
+
+	if (!s)
+		return ;
+	l = ft_strlen(s);
+	if (l < 1)
+		return ;
+	ft_check_1(s[0], config);
+	ft_check_1(s[l - 1], config);
+	i = 0;
+	while (s[i])
+	{
+		f(s[i], config);
+		i++;
+	}
 }
