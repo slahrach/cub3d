@@ -6,7 +6,7 @@
 #    By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/06 19:47:07 by slahrach          #+#    #+#              #
-#    Updated: 2022/12/15 02:48:23 by slahrach         ###   ########.fr        #
+#    Updated: 2022/12/20 00:17:10 by slahrach         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ all : ${NAME}
 
 ${NAME} : ${OBJS}
 	Make -C ${LIBFT}
-	${CC} ${OBJS} ${LIB} -Lmlx -lmlx -framework OpenGL -framework AppKit -o ${NAME}
+	${CC} ${OBJS} ${LIB} -lmlx -framework OpenGL -framework AppKit -fsanitize=address -o ${NAME}
 
 clean :
 	Make clean -C ${LIBFT}

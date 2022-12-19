@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2022/12/16 21:12:17 by slahrach         ###   ########.fr       */
+/*   Updated: 2022/12/20 00:33:14 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,73 +37,73 @@ void	draw_square(t_data *data, int x, int y, int color, int l)
 	}
 }
 
-void	draw_line (t_data *data, int x0,int y0,int x1,int y1)
-{
-	int dy, dx, incrE, incrNE, d,x,y;
+// void	draw_line (t_data *data, int x0,int y0,int x1,int y1)
+// {
+// 	int dy, dx, incrE, incrNE, d,x,y;
 
-	dx = x1 - x0;
-	dy = y1 - y0;
-	d = 2 * dy - dx;
-	incrE = 2*dy;
-	incrNE = 2*(dy - dx);
-	x = x0;
-	y = y0;
+// 	dx = x1 - x0;
+// 	dy = y1 - y0;
+// 	d = 2 * dy - dx;
+// 	incrE = 2*dy;
+// 	incrNE = 2*(dy - dx);
+// 	x = x0;
+// 	y = y0;
 
-	if (x0 == x1)
-	{
-		if (y0 < y1)
-		{
-			y = y0;
-			dy = y1;
-		}
-		else
-		{
-			y = y1;
-			dy = y0;
-		}
-		while (y < dy)
-		{
-			my_mlx_pixel_put(data, x0, y, 0x00FF0000);
-			y++;
-		}
-		return ;
-	}
-	if (y0 == y1)
-	{
-		if (x0 < x1)
-		{
-			x = x0;
-			dx = x1;
-		}
-		else
-		{
-			x = x1;
-			dx = x0;
-		}
-		while (x < dx)
-		{
-			my_mlx_pixel_put(data, x, y0, 0x00FF0000);
-			x++;
-		}
-		return ;
-	}
-  	my_mlx_pixel_put(data, x, y, 0x00FF0000);
-  	while(x < x1)
-    {
-      	if (d <= 0)
-		{
-			d += incrE;
-			x++;
-		}
-      	else
-		{
-			d += incrNE;
-			x++;
-			y++;
-		}
-      	my_mlx_pixel_put(data, x, y, 0x00FF0000);
-    } 
-}
+// 	if (x0 == x1)
+// 	{
+// 		if (y0 < y1)
+// 		{
+// 			y = y0;
+// 			dy = y1;
+// 		}
+// 		else
+// 		{
+// 			y = y1;
+// 			dy = y0;
+// 		}
+// 		while (y < dy)
+// 		{
+// 			my_mlx_pixel_put(data, x0, y, 0x00FF0000);
+// 			y++;
+// 		}
+// 		return ;
+// 	}
+// 	if (y0 == y1)
+// 	{
+// 		if (x0 < x1)
+// 		{
+// 			x = x0;
+// 			dx = x1;
+// 		}
+// 		else
+// 		{
+// 			x = x1;
+// 			dx = x0;
+// 		}
+// 		while (x < dx)
+// 		{
+// 			my_mlx_pixel_put(data, x, y0, 0x00FF0000);
+// 			x++;
+// 		}
+// 		return ;
+// 	}
+//   	my_mlx_pixel_put(data, x, y, 0x00FF0000);
+//   	while(x < x1)
+//     {
+//       	if (d <= 0)
+// 		{
+// 			d += incrE;
+// 			x++;
+// 		}
+//       	else
+// 		{
+// 			d += incrNE;
+// 			x++;
+// 			y++;
+// 		}
+//       	my_mlx_pixel_put(data, x, y, 0x00FF0000);
+//     } 
+// }
 void	init_window(t_config *config)
 {
 	config->data_mlx->mlx = mlx_init();
@@ -118,7 +118,7 @@ void	draw_minimap(t_config *config)
 
 	i = 0;
 	j = 0;
-	config->data_mlx->img = mlx_new_image(config->data_mlx->mlx, config->map_width * 16, config->map_len * 16);
+	config->data_mlx->img = mlx_new_image(config->data_mlx->mlx, config->map_width * 24, config->map_len * 24);
 	config->data_mlx->addr = mlx_get_data_addr(config->data_mlx->img, &config->data_mlx->bits_per_pixel, &config->data_mlx->line_length,
 		&config->data_mlx->endian);
 	map = config->map;
@@ -128,15 +128,15 @@ void	draw_minimap(t_config *config)
 		while (i < ft_strlen(map[j]))
 		{
 			if (map[j][i] == '1')
-				draw_square(config->data_mlx, i * 16, j * 16, 0x00FFFFFF, 16);
+				draw_square(config->data_mlx, i * 24, j * 24, 0x00FFFFFF, 24);
 			else if (map[j][i] != ' ')
-				draw_square(config->data_mlx, i * 16, j * 16, 0x00000000, 16);
+				draw_square(config->data_mlx, i * 24, j * 24, 0x00000000, 24);
 			i++;
 		}
 		j++;
 	}
-	draw_square(config->data_mlx, config->px * 16 + 4, config->py * 16 + 4, 0x00FF0000, 8);
-	draw_line(config->data_mlx, config->px * 16 + 6, config->py * 16 + 6, config->px * 16 + 6 + cos(config->r) * 20, config->py * 16 + 6 + sin(config->r) * 20);
+	draw_square(config->data_mlx, config->px * 24 + 6, config->py * 24 + 6, 0x00FF0000, 12);
+	//draw_line(config->data_mlx, config->px * 16 + 6, config->py * 16 + 6, config->px * 16 + 6 + cos(config->r) * 20, config->py * 16 + 6 + sin(config->r) * 20);
 	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img, 0, 0);
 }
 
@@ -155,13 +155,8 @@ int	key_hook(int keycode, t_config *config)
 
 	if(keycode == 53)
 		free_exit(config->data_mlx );
-	printf("%d\n", keycode);
 	x = config->px;
 	y = config->py;
-	if (keycode == 123)
-		config->r--;
-	if (keycode == 124)
-		config->r++;
 	if (keycode == 2)
         x+=1;
     else if (keycode == 0)
@@ -183,6 +178,9 @@ int	key_hook(int keycode, t_config *config)
 
 void	ft_raycast(t_config *config)
 {
+	void	*mlx;
+	void	*mlx_win;
+
 	init_window(config);
 	draw_minimap(config);
 	mlx_hook(config->data_mlx->mlx_win, 17, 0L, free_exit, config->data_mlx);

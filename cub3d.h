@@ -15,7 +15,7 @@
 #ifndef CUBE3D_H
 # define CUBE3D_H
 # include "libft/libft.h"
-# include "mlx/mlx.h"
+# include <mlx.h>
 # include "gnl.h"
 # include <stdio.h>
 # include <unistd.h>

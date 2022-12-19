@@ -248,6 +248,7 @@ void	ft_init(t_config	*game)
 	game->textures = NULL;
 	game->f_color = NULL;
 	game->c_color = NULL;
+	game->data_mlx = malloc (sizeof (t_data *));
 	game->map_len = 0;
 	game->orientation = 0;
 	game->r = M_PI_2;
@@ -281,6 +282,5 @@ int	main(int argc, char** argv)
 	ft_init(&game);
 	ft_init_config(&game, argc, argv);
 	ft_player_info(&game);
-	//printf("%f\n", cos(M_PI_2));
 	ft_raycast(&game);
 }
