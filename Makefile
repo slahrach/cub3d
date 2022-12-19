@@ -6,7 +6,7 @@
 #    By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/06 19:47:07 by slahrach          #+#    #+#              #
-#    Updated: 2022/11/21 11:37:52 by slahrach         ###   ########.fr        #
+#    Updated: 2022/12/15 02:48:23 by slahrach         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIB = libft/libft.a
 
 LIBFT = ./libft
 
-SRCS =  cub3d.c gnl.c gnl_utils.c utils.c
+SRCS =  cub3d.c gnl.c gnl_utils.c utils.c two_d.c
 
 CFLAGS = -Wall -Wextra -Werror
 
@@ -28,7 +28,7 @@ all : ${NAME}
 
 ${NAME} : ${OBJS}
 	Make -C ${LIBFT}
-	${CC} -o ${NAME} ${OBJS} ${LIB}
+	${CC} ${OBJS} ${LIB} -Lmlx -lmlx -framework OpenGL -framework AppKit -o ${NAME}
 
 clean :
 	Make clean -C ${LIBFT}
@@ -41,6 +41,6 @@ fclean : clean
 re : fclean all
 
 %.o : %.c
-	${CC} -c $<
+	${CC}  -Imlx -c $<
 
 .PHONY: clean all fclean re bonus

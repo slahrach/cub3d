@@ -15,6 +15,7 @@
 #ifndef CUBE3D_H
 # define CUBE3D_H
 # include "libft/libft.h"
+# include "mlx/mlx.h"
 # include "gnl.h"
 # include <stdio.h>
 # include <unistd.h>
@@ -22,8 +23,24 @@
 # include <string.h>
 # include <fcntl.h>
 # include <limits.h>
-# define MAP_SIZE 200
+# include <math.h>
 
+typedef struct s_player
+{
+    int x;
+    int y;
+} t_player;
+
+
+typedef struct	s_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+    void	*mlx;
+	void	*mlx_win;
+}	t_data;
 
 typedef struct s_texture
 {
@@ -35,11 +52,16 @@ typedef struct s_texture
 typedef struct s_config
 {
 	t_texture	*textures;
+	double		r;
 	char		*c_color;
 	char		*f_color;
 	int			map_len;
+	int			map_width;
 	char		orientation;
 	char		**map;
+	t_data		*data_mlx;
+	int			px;
+	int			py;
 } t_config;
 
 void			ft_addtexture_back(t_texture **head, t_texture *new);
@@ -50,8 +72,8 @@ t_texture		*ft_texturelast(t_texture *lst);
 int		 		ft_atoi_(const char *str);
 void			ft_strmapi_(char const *s, void (*f)(char, t_config *), t_config *config);
 void			ft_check_1(char c, t_config* config);
-// int			  ft_raycast (void);
 char			*get_next_line(int fd);
+void			ft_raycast(t_config *config);
 
 
 #endif

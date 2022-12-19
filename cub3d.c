@@ -10,7 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
+/*
+  empty line between map lines
+  handle spaces in map lines
+*/
 #include "cub3d.h"
 
 void ft_handle_error(char *error)
@@ -180,7 +183,21 @@ void	ft_check_chars(char c, t_config *config)
 		config->orientation = c;
 	}
 }
+int	ft_get_width(t_config *config)
+{
+	int	i;
+	int	len;
 
+	i = 0;
+	len = ft_strlen(config->map[0]);
+	while (config->map[i])
+	{
+		if (ft_strlen(config->map[i]) > len)
+			len = ft_strlen(config->map[i]);
+		i++;
+	}
+	return (len);
+}
 void	ft_parse_map(char *map, t_config *config)
 {
 	int	i;
@@ -195,6 +212,7 @@ void	ft_parse_map(char *map, t_config *config)
 		ft_strmapi_(config->map[i], ft_check_chars, config);
 		i++;
 	}
+	config->map_width = ft_get_width(config);
 }
 
 void ft_handle_scene_file(t_config *config, char *path)
@@ -232,13 +250,37 @@ void	ft_init(t_config	*game)
 	game->c_color = NULL;
 	game->map_len = 0;
 	game->orientation = 0;
+	game->r = M_PI_2;
 }
 
+void	ft_player_info(t_config *config)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	while (j < config->map_len)
+	{
+		i = 0;
+		while(i < ft_strlen(config->map[j]))
+		{
+			if(config->map[j][i] == config->orientation)
+			{
+				config->px = i;
+				config->py = j;
+			}
+			i++;
+		}
+		j++;
+	}
+}
 int	main(int argc, char** argv)
 {
 	t_config game;
 
 	ft_init(&game);
 	ft_init_config(&game, argc, argv);
-	//ft_raycast();
+	ft_player_info(&game);
+	//printf("%f\n", cos(M_PI_2));
+	ft_raycast(&game);
 }
