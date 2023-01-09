@@ -6,7 +6,7 @@
 /*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/09 12:28:28 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/09 12:31:01 by kessalih         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,46 +93,6 @@ void	draw_minimap(t_config *config)
 	}
 	
 }
-
-
-    // img->new_xp_front = img->xp + (cos(img->angle) * 1);
-    // img->new_yp_front = img->yp + (sin(img->angle) * 1);
-    // /////////////back
-    // img->new_xp_back = img->xp - cos(img->angle) * 1;
-    // img->new_yp_back = img->yp - sin(img->angle) * 1;
-    // /////////////left
-    // img->new_xp_left = img->xp + sin(img->angle) * 1;
-    // img->new_yp_left = img->yp - cos(img->angle) * 1;
-    // /////////////right
-    // img->new_xp_right = img->xp - sin(img->angle) * 1;
-    // img->new_yp_right = img->yp + cos(img->angle) * 1;
-
-
-// void DDA(int X0, int Y0, int X1, int Y1)
-// {
-//     // calculate dx & dy
-//     int dx = X1 - X0;
-//     int dy = Y1 - Y0;
- 
-//     // calculate steps required for generating pixels
-//     int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
- 
-//     // calculate increment in x & y for each steps
-//     float Xinc = dx / (float)steps;
-//     float Yinc = dy / (float)steps;
- 
-//     // Put pixel for each step
-//     float X = X0;
-//     float Y = Y0;
-//     for (int i = 0; i <= steps; i++) {
-//         putpixel(round(X), round(Y),
-//                  RED); // put pixel at (X,Y)
-//         X += Xinc; // increment in x at each step
-//         Y += Yinc; // increment in y at each step
-//         delay(100); // for visualization of line-
-//                     // generation step by step
-//     }
-// }
 
 double	deg_to_rad(double x)
 {
