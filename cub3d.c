@@ -243,8 +243,11 @@ void ft_init_config (t_config *config, int ac, char **av)
 	ft_handle_scene_file(config, av[1]);
 }
 
-void	ft_init(t_config	*game)
+t_config	*ft_init()
 {
+	t_config *game;
+
+	game = malloc(sizeof(t_config));
 	game->textures = NULL;
 	game->f_color = NULL;
 	game->c_color = NULL;
@@ -252,6 +255,9 @@ void	ft_init(t_config	*game)
 	game->map_len = 0;
 	game->orientation = 0;
 	game->r = M_PI_2;
+	game->player = malloc(sizeof(t_player));
+	game->rays = malloc(sizeof(t_rays *) * X);
+	return (game);
 }
 
 void	ft_player_info(t_config *config)
@@ -267,20 +273,49 @@ void	ft_player_info(t_config *config)
 		{
 			if(config->map[j][i] == config->orientation)
 			{
-				config->px = i;
-				config->py = j;
+				config->player->i = (i * SIZE) + (SIZE / 2);
+				config->player->j = (j * SIZE) + (SIZE / 2);
+				printf("%d %d sss\n",config->player->i,config->player->j);
+				if (config->orientation == 'N')
+					config->player->angle = (270);
+				else if (config->orientation == 'S')
+					config->player->angle = 90;
+				else if (config->orientation == 'W')
+					config->player->angle = 180;
+				else if (config->orientation == 'E')
+					config->player->angle = 0;
 			}
 			i++;
 		}
 		j++;
 	}
+	
+}
+
+void	ft_player_angle(t_player *player)
+{
+	if (player->angle > 270 || player->angle < 90)
+		player->left = -1;
+	else
+		player->left = 1;
+	if (player->angle > 0 && player->angle < 180)
+		player->top = -1;
+	else
+		player->top = 1;
+}
+
+void	ft_init_player(t_config *config)
+{
+	ft_player_info(config);
+	ft_player_angle(config->player);
+
 }
 int	main(int argc, char** argv)
 {
-	t_config game;
+	t_config *game;
 
-	ft_init(&game);
-	ft_init_config(&game, argc, argv);
-	ft_player_info(&game);
-	ft_raycast(&game);
+	game = ft_init();
+	ft_init_config(game, argc, argv);
+	ft_init_player(game);
+	ft_raycast(game);
 }

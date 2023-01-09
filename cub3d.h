@@ -25,22 +25,32 @@
 # include <limits.h>
 # include <math.h>
 
+# define SIZE 28
+# define P_SIZE 1
+# define X 1200
+# define Y 800
+
 typedef struct s_player
 {
-    int x;
-    int y;
+    float	x;
+    float	y;
+	float	i;
+	float	j;
+	int		top;
+	int		left;
+	double	angle;
 } t_player;
 
-
 typedef struct	s_data {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-    void	*mlx;
-	void	*mlx_win;
-}	t_data;
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+    void		*mlx;
+	void		*mlx_win;
+	
+}				t_data;
 
 typedef struct s_texture
 {
@@ -49,10 +59,18 @@ typedef struct s_texture
 	struct s_texture *next;
 } t_texture;
 
+typedef	struct s_rays
+{
+	float	dest;
+	float	ray_angle;
+} t_rays;
+
+
 typedef struct s_config
 {
 	t_texture	*textures;
 	double		r;
+	double		ray_angle;
 	char		*c_color;
 	char		*f_color;
 	int			map_len;
@@ -60,10 +78,12 @@ typedef struct s_config
 	char		orientation;
 	char		**map;
 	t_data		*data_mlx;
-	int			px;
-	int			py;
+	t_player	*player;
+	t_rays		**rays;		
 } t_config;
 
+void	ft_player_angle(t_player *player);
+void	draw_player(t_config *config);
 void			ft_addtexture_back(t_texture **head, t_texture *new);
 t_texture		*ft_texturenew(char *id, char *path);
 void			ft_addtexture_front(t_texture **head, t_texture *new);

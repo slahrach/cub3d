@@ -3,187 +3,282 @@
 /*                                                        :::      ::::::::   */
 /*   two_d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2022/12/20 00:33:14 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/09 12:28:28 by kessalih         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
-}
-void	draw_square(t_data *data, int x, int y, int color, int l)
-{
-	int	x1;
-	int	y1;
-
-	y1 = y;
-	while(y1 < y + l)
-	{
-		x1 = x;
-		while(x1 < x + l)
-		{
-			my_mlx_pixel_put(data, x1, y1, color);
-			x1++;
-		}
-		y1++;
-	}
-}
-
-// void	draw_line (t_data *data, int x0,int y0,int x1,int y1)
+// void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 // {
-// 	int dy, dx, incrE, incrNE, d,x,y;
+// 	char	*dst;
 
-// 	dx = x1 - x0;
-// 	dy = y1 - y0;
-// 	d = 2 * dy - dx;
-// 	incrE = 2*dy;
-// 	incrNE = 2*(dy - dx);
-// 	x = x0;
-// 	y = y0;
-
-// 	if (x0 == x1)
-// 	{
-// 		if (y0 < y1)
-// 		{
-// 			y = y0;
-// 			dy = y1;
-// 		}
-// 		else
-// 		{
-// 			y = y1;
-// 			dy = y0;
-// 		}
-// 		while (y < dy)
-// 		{
-// 			my_mlx_pixel_put(data, x0, y, 0x00FF0000);
-// 			y++;
-// 		}
-// 		return ;
-// 	}
-// 	if (y0 == y1)
-// 	{
-// 		if (x0 < x1)
-// 		{
-// 			x = x0;
-// 			dx = x1;
-// 		}
-// 		else
-// 		{
-// 			x = x1;
-// 			dx = x0;
-// 		}
-// 		while (x < dx)
-// 		{
-// 			my_mlx_pixel_put(data, x, y0, 0x00FF0000);
-// 			x++;
-// 		}
-// 		return ;
-// 	}
-//   	my_mlx_pixel_put(data, x, y, 0x00FF0000);
-//   	while(x < x1)
-//     {
-//       	if (d <= 0)
-// 		{
-// 			d += incrE;
-// 			x++;
-// 		}
-//       	else
-// 		{
-// 			d += incrNE;
-// 			x++;
-// 			y++;
-// 		}
-//       	my_mlx_pixel_put(data, x, y, 0x00FF0000);
-//     } 
+// 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+// 	*(unsigned int*)dst = color;
 // }
+
 void	init_window(t_config *config)
 {
 	config->data_mlx->mlx = mlx_init();
-	config->data_mlx->mlx_win = mlx_new_window(config->data_mlx->mlx, config->map_width * 48, config->map_len * 48, "Hello world!");
+	config->data_mlx->mlx_win = mlx_new_window(config->data_mlx->mlx, X, Y, "Hello world!");
+}
+
+void	draw_square(int i, int j, int x, t_config *config)
+{
+	int	t1;
+	int	t2;
+
+	t1 = j * x;
+	while (t1 <= x * (j + 1))
+	{
+		t2 = i * x;
+		while (t2 <= x * (i + 1))
+		{	
+			if (config->map[j][i] == '1')
+				mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win, t2, t1, 0xFFFFFF);
+			else
+				mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win, t2, t1, 0x000000);
+			t2++;
+		}
+		t1++;
+	}
+}
+
+void	draw_player(t_config *config)
+{
+	float	t1;
+	float	t2;
+
+	t1 = 0;
+	while (t1 <= P_SIZE / 2)
+	{
+		t2 = 0;
+		while (t2 <= P_SIZE / 2)
+		{
+			if (t1 == 0 && t2 == 0)
+			{
+				config->player->j = config->player->j + config->player->y;
+				config->player->i = config->player->i + config->player->x;
+			}
+			mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win ,config->player->i + t2, config->player->j + t1, 0xFF0000);
+			t2++;
+		}
+		t1++;
+	}
 }
 
 void	draw_minimap(t_config *config)
 {
-	char	**map;
-	int		i;
-	int		j;
+	int	i;
+	int	j;
+	int	x;
 
 	i = 0;
 	j = 0;
-	config->data_mlx->img = mlx_new_image(config->data_mlx->mlx, config->map_width * 24, config->map_len * 24);
-	config->data_mlx->addr = mlx_get_data_addr(config->data_mlx->img, &config->data_mlx->bits_per_pixel, &config->data_mlx->line_length,
-		&config->data_mlx->endian);
-	map = config->map;
-	while(j < config->map_len)
+	x = 28;
+	while (config->map[j])
 	{
 		i = 0;
-		while (i < ft_strlen(map[j]))
+		x = 28;
+		while (config->map[j][i])
 		{
-			if (map[j][i] == '1')
-				draw_square(config->data_mlx, i * 24, j * 24, 0x00FFFFFF, 24);
-			else if (map[j][i] != ' ')
-				draw_square(config->data_mlx, i * 24, j * 24, 0x00000000, 24);
+			draw_square(i, j, 28, config);
 			i++;
+			x = x + 28;
 		}
 		j++;
 	}
-	draw_square(config->data_mlx, config->px * 24 + 6, config->py * 24 + 6, 0x00FF0000, 12);
-	//draw_line(config->data_mlx, config->px * 16 + 6, config->py * 16 + 6, config->px * 16 + 6 + cos(config->r) * 20, config->py * 16 + 6 + sin(config->r) * 20);
-	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img, 0, 0);
+	
 }
 
-int	free_exit(t_data *data)
+
+    // img->new_xp_front = img->xp + (cos(img->angle) * 1);
+    // img->new_yp_front = img->yp + (sin(img->angle) * 1);
+    // /////////////back
+    // img->new_xp_back = img->xp - cos(img->angle) * 1;
+    // img->new_yp_back = img->yp - sin(img->angle) * 1;
+    // /////////////left
+    // img->new_xp_left = img->xp + sin(img->angle) * 1;
+    // img->new_yp_left = img->yp - cos(img->angle) * 1;
+    // /////////////right
+    // img->new_xp_right = img->xp - sin(img->angle) * 1;
+    // img->new_yp_right = img->yp + cos(img->angle) * 1;
+
+
+// void DDA(int X0, int Y0, int X1, int Y1)
+// {
+//     // calculate dx & dy
+//     int dx = X1 - X0;
+//     int dy = Y1 - Y0;
+ 
+//     // calculate steps required for generating pixels
+//     int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+ 
+//     // calculate increment in x & y for each steps
+//     float Xinc = dx / (float)steps;
+//     float Yinc = dy / (float)steps;
+ 
+//     // Put pixel for each step
+//     float X = X0;
+//     float Y = Y0;
+//     for (int i = 0; i <= steps; i++) {
+//         putpixel(round(X), round(Y),
+//                  RED); // put pixel at (X,Y)
+//         X += Xinc; // increment in x at each step
+//         Y += Yinc; // increment in y at each step
+//         delay(100); // for visualization of line-
+//                     // generation step by step
+//     }
+// }
+
+double	deg_to_rad(double x)
 {
-	mlx_destroy_window(data->mlx, data->mlx_win);
-	free(data->mlx);
-	exit (0);
-	return (0);
+	return (x / 180 * M_PI);
+}
+
+float    render_ray(t_config *config)
+{
+    float	xstart;
+	float	xstart_p;
+    float	ystart;
+	float	ystart_p;
+	int		i;
+
+	
+    xstart = config->player->i + cos(deg_to_rad(config->player->angle));
+	xstart_p = config->player->i + cos(deg_to_rad(config->player->angle));
+    ystart = config->player->j + sin(deg_to_rad(config->player->angle));
+	ystart_p = config->player->j + sin(deg_to_rad(config->player->angle));
+	i = 0;
+    while (config->map[(int)(ystart / 28)][(int)(xstart / 28)] != '1')
+    {
+		mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,xstart,ystart,0x00FF00);
+		ystart += sin(deg_to_rad(config->ray_angle));
+		xstart += cos(deg_to_rad(config->ray_angle));
+		i++;
+    }
+	return (sqrt(((xstart - xstart_p) * (xstart - xstart_p)) + ((ystart - ystart_p) * (ystart - ystart_p))));
+}
+
+int	ft_check_wall(t_config *config, int deg, int s)
+{
+	float	i;
+	float	j;
+	int		x;
+	
+	i = config->player->i;
+	j = config->player->j;
+	x = 0;
+	while (x < 5)
+	{
+		if (config->map[(int)j / 28][(int)i / 28] == '1')
+			return (0);
+		i += cos(deg_to_rad(config->player->angle + deg)) * s;
+		j += sin(deg_to_rad(config->player->angle + deg)) * s;
+		x++;
+	}
+	return (1);
+}
+
+void	free_rays(t_config *config)
+{
+	int	i;
+
+	i = 0;
+	while (i < X)
+	{
+		free(config->rays[i]);
+		i++;
+	}
+}
+
+void	check_angle(t_config *config)
+{
+	if (config->player->angle > 360)
+		config->player->angle -= 360;
+	else if (config->player->angle < 0)
+		config->player->angle += 360;
 }
 
 int	key_hook(int keycode, t_config *config)
 {
-	int	x;
-	int	y;
-
-	if(keycode == 53)
-		free_exit(config->data_mlx );
-	x = config->px;
-	y = config->py;
-	if (keycode == 2)
-        x+=1;
-    else if (keycode == 0)
-        x-=1;
-    else if (keycode == 13)
-        y-=1;
-    else if (keycode == 1)
-        y+=1;
-	if (config->map[y][x] != '1')
+	config->player->x = 0;
+	config->player->y = 0;
+	if (keycode == 2) // D
 	{
-		config->px = x;
-		config->py = y;
+		if (ft_check_wall(config, 90, 1) == 0)
+			return (keycode);
+        config->player->x = cos(deg_to_rad(config->player->angle + 90));
+		config->player->y = sin(deg_to_rad(config->player->angle + 90));
 	}
-	mlx_destroy_image(config->data_mlx->mlx, config->data_mlx->img);
+	else if (keycode == 0) // A
+	{
+		if (ft_check_wall(config, 90, -1) == 0)
+			return (keycode);
+        config->player->x = cos(deg_to_rad(config->player->angle + 90)) * -1;
+		config->player->y = sin(deg_to_rad(config->player->angle + 90)) * -1;
+	}
+    else if (keycode == 13) //W
+	{
+		if (ft_check_wall(config, 0, 1) == 0)
+			return (keycode);
+        config->player->x = cos(deg_to_rad(config->player->angle));
+		config->player->y = sin(deg_to_rad(config->player->angle));
+	}
+    else if (keycode == 1) // S
+	{
+		if (ft_check_wall(config, 0, -1) == 0)
+			return (keycode);
+		config->player->x = cos(deg_to_rad(config->player->angle)) * -1;
+		config->player->y = sin(deg_to_rad(config->player->angle)) * -1;
+	}
+	else
+	{
+		if (keycode == 123) // <-
+			config->player->angle = config->player->angle + 10;
+			
+		else if (keycode == 124) // ->
+			config->player->angle = config->player->angle - 10;
+		check_angle(config);
+	}
+	ft_player_angle(config->player);
 	draw_minimap(config);
+	draw_player(config);
+	free_rays(config);
+	int x = 0;
+	config->ray_angle = config->player->angle - 30;
+	while (x < X)
+	{
+		config->rays[x] = malloc(sizeof(t_rays));
+		config->rays[x]->dest = render_ray(config);
+		config->rays[x]->ray_angle = config->ray_angle;
+		config->ray_angle += 60.0 / X;
+		printf("ray angel -= %f %f\n", config->rays[x]->ray_angle, config->rays[x]->dest);
+		x++;
+	}
 	return (keycode);
 }
 
-
 void	ft_raycast(t_config *config)
 {
-	void	*mlx;
-	void	*mlx_win;
-
+	double angle = 60;
 	init_window(config);
 	draw_minimap(config);
-	mlx_hook(config->data_mlx->mlx_win, 17, 0L, free_exit, config->data_mlx);
-	mlx_key_hook(config->data_mlx->mlx_win, key_hook, config);
+	draw_player(config);
+	int x = 0;
+	config->ray_angle = config->player->angle - 30;
+	while (x < X)
+	{
+		config->rays[x] = malloc(sizeof(t_rays));
+		config->rays[x]->dest = render_ray(config);
+		config->rays[x]->ray_angle = config->ray_angle;
+		config->ray_angle += 60.0 / X;
+		printf("ray angel -= %f %f\n", config->rays[x]->ray_angle, config->rays[x]->dest);
+		x++;
+	}
+	mlx_hook(config->data_mlx->mlx_win,3,0, key_hook, config);
 	mlx_loop(config->data_mlx->mlx);
 }
