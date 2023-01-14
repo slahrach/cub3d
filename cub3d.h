@@ -66,6 +66,12 @@ typedef	struct s_rays
 } t_rays;
 
 
+typedef struct s_wall
+{
+	int	x1;
+	int	x2;
+} t_wall;
+
 typedef struct s_config
 {
 	t_texture	*textures;
@@ -75,11 +81,13 @@ typedef struct s_config
 	char		*f_color;
 	int			map_len;
 	int			map_width;
+	int			wall_h;
 	char		orientation;
 	char		**map;
 	t_data		*data_mlx;
 	t_player	*player;
-	t_rays		**rays;		
+	t_rays		**rays;
+	t_wall		**walls;	
 } t_config;
 
 void	ft_player_angle(t_player *player);
@@ -94,6 +102,6 @@ void			ft_strmapi_(char const *s, void (*f)(char, t_config *), t_config *config)
 void			ft_check_1(char c, t_config* config);
 char			*get_next_line(int fd);
 void			ft_raycast(t_config *config);
-
+void	draw_map(t_config *config);
 
 #endif

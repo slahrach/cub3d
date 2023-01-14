@@ -257,6 +257,7 @@ t_config	*ft_init()
 	game->r = M_PI_2;
 	game->player = malloc(sizeof(t_player));
 	game->rays = malloc(sizeof(t_rays *) * X);
+	game->walls = malloc(sizeof(t_wall *) * X);
 	return (game);
 }
 
