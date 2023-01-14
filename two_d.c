@@ -6,7 +6,7 @@
 /*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/14 23:45:26 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/14 23:48:35 by kessalih         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	draw_player(t_config *config)
 				config->player->j = config->player->j + config->player->y;
 				config->player->i = config->player->i + config->player->x;
 			}
-			mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win ,config->player->i + t2, config->player->j + t1, 0xFF0000);
+			//mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win ,config->player->i + t2, config->player->j + t1, 0xFF0000);
 			t2++;
 		}
 		t1++;
@@ -219,7 +219,7 @@ int	key_hook(int keycode, t_config *config)
 	ft_player_angle(config->player);
 	draw_map(config);
 	//draw_minimap(config);
-	//draw_player(config);
+	draw_player(config);
 	free_rays(config);
 	free_walls(config);
 	int x = 0;
@@ -270,7 +270,7 @@ void	ft_raycast(t_config *config)
 	double angle = 60;
 	init_window(config);
 	//draw_minimap(config);
-	//draw_player(config);
+	draw_player(config);
 	int x = 0;
 	config->ray_angle = config->player->angle - 30;
 	while (x < X)
