@@ -302,14 +302,13 @@ void	ft_player_angle(t_player *player)
 	if (player->angle > 0 && player->angle < 180)
 		player->top = -1;
 	else
-		player->top = 1;
+		player->top = 1;	
 }
 
 void	ft_init_player(t_config *config)
 {
 	ft_player_info(config);
 	ft_player_angle(config->player);
-
 }
 int	main(int argc, char** argv)
 {

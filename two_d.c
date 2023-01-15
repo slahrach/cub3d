@@ -6,7 +6,7 @@
 /*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/14 23:48:35 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/15 16:02:20 by kessalih         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	draw_player(t_config *config)
 				config->player->j = config->player->j + config->player->y;
 				config->player->i = config->player->i + config->player->x;
 			}
-			//mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win ,config->player->i + t2, config->player->j + t1, 0xFF0000);
+			mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win ,config->player->i + t2, config->player->j + t1, 0xFF0000);
 			t2++;
 		}
 		t1++;
@@ -78,16 +78,16 @@ void	draw_minimap(t_config *config)
 
 	i = 0;
 	j = 0;
-	x = 64;
+	x = 28;
 	while (config->map[j])
 	{
 		i = 0;
-		x = 64;
+		x = 28;
 		while (config->map[j][i])
 		{
-			draw_square(i, j, 64, config);
+			draw_square(i, j, 28, config);
 			i++;
-			x = x + 64;
+			x = x + 28;
 		}
 		j++;
 	}
@@ -97,6 +97,23 @@ void	draw_minimap(t_config *config)
 double	deg_to_rad(double x)
 {
 	return (x / 180 * M_PI);
+}
+
+int	ft_check_wall_ray(t_config *config, float xstart, float ystart)
+{
+	int		x;
+	int		i;
+	int		j;
+
+	i = xstart;
+	j = ystart;	
+	x = 0;
+	if (config->map[(int)j / 28 ][(int)i / 28 ] == '1')
+			return (0);
+	i += cos(deg_to_rad(config->ray_angle));
+	j += sin(deg_to_rad(config->ray_angle));
+
+	return (1);
 }
 
 float    render_ray(t_config *config)
@@ -113,11 +130,11 @@ float    render_ray(t_config *config)
     ystart = config->player->j + sin(deg_to_rad(config->player->angle));
 	ystart_p = config->player->j + sin(deg_to_rad(config->player->angle));
 	i = 0;
-    while (config->map[(int)(ystart / 64)][(int)(xstart / 64)] != '1')
+    while (ft_check_wall_ray(config, xstart, ystart))
     {
-		//mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,xstart,ystart,0x00FF00);
-		ystart += sin(deg_to_rad(config->ray_angle));
-		xstart += cos(deg_to_rad(config->ray_angle));
+		mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,xstart,ystart,0x00FF00);
+		ystart += sin(deg_to_rad(config->ray_angle)) / 16;
+		xstart += cos(deg_to_rad(config->ray_angle)) / 16;
 		i++;
     }
 	return (sqrt(((xstart - xstart_p) * (xstart - xstart_p)) + ((ystart - ystart_p) * (ystart - ystart_p))));
@@ -134,7 +151,7 @@ int	ft_check_wall(t_config *config, int deg, int s)
 	x = 0;
 	while (x < 5)
 	{
-		if (config->map[(int)j / 64][(int)i / 64] == '1')
+		if (config->map[(int)j / 28][(int)i / 28] == '1')
 			return (0);
 		i += cos(deg_to_rad(config->player->angle + deg)) * s;
 		j += sin(deg_to_rad(config->player->angle + deg)) * s;
@@ -218,24 +235,25 @@ int	key_hook(int keycode, t_config *config)
 	}
 	ft_player_angle(config->player);
 	draw_map(config);
-	//draw_minimap(config);
+	draw_minimap(config);
 	draw_player(config);
 	free_rays(config);
 	free_walls(config);
 	int x = 0;
+	int	y;
+	y = config->map_len * 28;
 	config->ray_angle = config->player->angle - 30;
 	while (x < X)
 	{
+		
 		config->rays[x] = malloc(sizeof(t_rays));
 		config->walls[x] = malloc(sizeof(t_wall));
 		config->rays[x]->dest = render_ray(config);
 		config->rays[x]->ray_angle = config->ray_angle;
 		config->ray_angle += 60.0 / X;
-		//config->wall_h = ((64 / config->rays[x]->dest) * ((X / 2) / tan(deg_to_rad(30))));
-		config->wall_h = Y / config->rays[x]->dest * 64;
-		config->walls[x]->x1 = floor((Y / 2) - (config->wall_h / 2));
-		config->walls[x]->x2 = floor((Y / 2) + (config->wall_h / 2));
-		//printf("ray angel -= %f %f and wall x1 %d X2 %d\n", config->rays[x]->ray_angle, config->rays[x]->dest, config->walls[x]->x1, config->walls[x]->x2);
+		config->wall_h = (float)y / config->rays[x]->dest * 64.0;
+		config->walls[x]->x1 = (Y / 2) - (config->wall_h / 2);
+		config->walls[x]->x2 = (Y / 2) + (config->wall_h / 2);
 		x++;
 	}
 	
@@ -268,29 +286,28 @@ void	draw_map(t_config *config)
 void	ft_raycast(t_config *config)
 {
 	double angle = 60;
+	int		y;
+
+	y = config->map_len * 28;
 	init_window(config);
-	//draw_minimap(config);
+	draw_minimap(config);
 	draw_player(config);
 	int x = 0;
 	config->ray_angle = config->player->angle - 30;
 	while (x < X)
 	{
-		// wall->wall_h = (TILE_SIZE / ray->dist_f) * ((WIDTH / 2) / tan(HALF_FOV));
-		// wall->wall_strip_height = (int) wall->wall_h;
-
 		config->rays[x] = malloc(sizeof(t_rays));
 		config->walls[x] = malloc(sizeof(t_wall));
 		config->rays[x]->dest = render_ray(config);
 		config->rays[x]->ray_angle = config->ray_angle;
 		config->ray_angle += 60.0 / X;
-		//config->wall_h = ((64 / config->rays[x]->dest) * ((X / 2) / tan(deg_to_rad(30))));
-		config->wall_h = (float)Y / config->rays[x]->dest * 64.0;
-		config->walls[x]->x1 = round((Y / 2.0) - (config->wall_h / 2.0));
-		config->walls[x]->x2 = round((Y / 2.0) + (config->wall_h / 2.0));
-		//printf("ray angel -= %f %f and wall x1 %d X2 %d\n", config->rays[x]->ray_angle, config->rays[x]->dest, config->walls[x]->x1, config->walls[x]->x2);
+		config->wall_h = (float)y / config->rays[x]->dest * 64.0;
+		config->walls[x]->x1 = (Y / 2.0) - (config->wall_h / 2.0);
+		config->walls[x]->x2 = (Y / 2.0) + (config->wall_h / 2.0);
 		x++;
 	}
-	draw_map(config);	
+	draw_map(config);
 	mlx_hook(config->data_mlx->mlx_win,3,0, key_hook, config);
+	mlx_hook(config->data_mlx->mlx_win,2,0, key_hook, config);
 	mlx_loop(config->data_mlx->mlx);
 }
