@@ -6,7 +6,7 @@
 /*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/15 16:02:20 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/15 17:41:42 by kessalih         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ int	key_hook(int keycode, t_config *config)
 		config->rays[x]->dest = render_ray(config);
 		config->rays[x]->ray_angle = config->ray_angle;
 		config->ray_angle += 60.0 / X;
-		config->wall_h = (float)y / config->rays[x]->dest * 64.0;
+		config->wall_h = ((float)y * 64.0) / (config->rays[x]->dest * cos(deg_to_rad(config->player->angle - config->ray_angle)));
 		config->walls[x]->x1 = (Y / 2) - (config->wall_h / 2);
 		config->walls[x]->x2 = (Y / 2) + (config->wall_h / 2);
 		x++;
