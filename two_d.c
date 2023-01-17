@@ -6,24 +6,26 @@
 /*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/15 17:41:42 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/17 19:54:36 by kessalih         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-// void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-// {
-// 	char	*dst;
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+{
+	char	*dst;
 
-// 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-// 	*(unsigned int*)dst = color;
-// }
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	*(unsigned int*)dst = color;
+}
 
 void	init_window(t_config *config)
 {
 	config->data_mlx->mlx = mlx_init();
 	config->data_mlx->mlx_win = mlx_new_window(config->data_mlx->mlx, X, Y, "Hello world!");
+	config->data_mlx->img = mlx_new_image(config->data_mlx->mlx, X, Y);
+	config->data_mlx->addr = mlx_get_data_addr(config->data_mlx->img, &config->data_mlx->bits_per_pixel, &config->data_mlx->line_length,&config->data_mlx->endian);
 }
 
 void	draw_square(int i, int j, int x, t_config *config)
@@ -63,7 +65,7 @@ void	draw_player(t_config *config)
 				config->player->j = config->player->j + config->player->y;
 				config->player->i = config->player->i + config->player->x;
 			}
-			mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win ,config->player->i + t2, config->player->j + t1, 0xFF0000);
+			//mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win ,config->player->i + t2, config->player->j + t1, 0xFF0000);
 			t2++;
 		}
 		t1++;
@@ -132,7 +134,7 @@ float    render_ray(t_config *config)
 	i = 0;
     while (ft_check_wall_ray(config, xstart, ystart))
     {
-		mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,xstart,ystart,0x00FF00);
+		//mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,xstart,ystart,0x00FF00);
 		ystart += sin(deg_to_rad(config->ray_angle)) / 16;
 		xstart += cos(deg_to_rad(config->ray_angle)) / 16;
 		i++;
@@ -226,16 +228,16 @@ int	key_hook(int keycode, t_config *config)
 	}
 	else
 	{
-		if (keycode == 123) // <-
+		if (keycode == 124) // <-
 			config->player->angle = config->player->angle + 10;
 			
-		else if (keycode == 124) // ->
+		else if (keycode == 123) // ->
 			config->player->angle = config->player->angle - 10;
 		check_angle(config);
 	}
 	ft_player_angle(config->player);
 	draw_map(config);
-	draw_minimap(config);
+	//draw_minimap(config);
 	draw_player(config);
 	free_rays(config);
 	free_walls(config);
@@ -272,15 +274,19 @@ void	draw_map(t_config *config)
 		while(j < Y)
 		{
 			if (j < config->walls[i]->x1)
-				mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,i,j,0x00FF00);
+				my_mlx_pixel_put(config->data_mlx,i,j,0x00FF00);
+			//mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,i,j,0x00FF00);
 			else if (j >= config->walls[i]->x1 && j < config->walls[i]->x2)
-				mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,i,j,0xFF0000);
+				my_mlx_pixel_put(config->data_mlx,i,j,0xFF0000);
+			//mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,i,j,0xFF0000);
 			else
-				mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,i,j,0x0000FF);	
+				my_mlx_pixel_put(config->data_mlx,i,j,0x0000FF);
+			//mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,i,j,0x0000FF);	
 			j++;
 		}
 		i++;
 	}
+	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img, 0, 0);
 }
 
 void	ft_raycast(t_config *config)
@@ -290,7 +296,7 @@ void	ft_raycast(t_config *config)
 
 	y = config->map_len * 28;
 	init_window(config);
-	draw_minimap(config);
+	//draw_minimap(config);
 	draw_player(config);
 	int x = 0;
 	config->ray_angle = config->player->angle - 30;

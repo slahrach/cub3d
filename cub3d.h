@@ -49,7 +49,6 @@ typedef struct	s_data {
 	int			endian;
     void		*mlx;
 	void		*mlx_win;
-	
 }				t_data;
 
 typedef struct s_texture

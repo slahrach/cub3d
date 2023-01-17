@@ -6,29 +6,11 @@
 /*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/06 19:46:37 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/04 10:37:10 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/17 19:44:56 by kessalih         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#include "cub3d.h"
-
-
-typedef struct s_user_info
-{
-    int px;
-    int py;
-} t_user_info;
-typedef struct	s_data {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-    void	*mlx;
-	void	*mlx_win;
-    t_user_info user;
-}				t_data;
 
 
 // void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
