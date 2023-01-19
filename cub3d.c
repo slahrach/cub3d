@@ -10,10 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-  empty line between map lines
-  handle spaces in map lines
-*/
 #include "cub3d.h"
 
 void ft_handle_error(char *error)
@@ -154,10 +150,16 @@ char *ft_parse_elements(t_config *config, int fd)
 			ft_check_elements(config, line_);
 			i++;
 		}
-		else if (ft_strlen(line) > 1 && i >= 6)
+		else if (i >= 6)
 		{
-			map = ft_strjoin(map, line);
-			(config->map_len)++;
+			if (ft_strlen(line) == 1 && i > 6)
+				ft_handle_error("error : empty line inside map");
+			if (ft_strlen(line) > 1)
+			{
+				i++;
+				map = ft_strjoin(map, line);
+				(config->map_len)++;
+			}
 		}
 		if (i == 6)
 			ft_check_missing_elements(config);
@@ -198,21 +200,65 @@ int	ft_get_width(t_config *config)
 	}
 	return (len);
 }
-void	ft_parse_map(char *map, t_config *config)
+int	ft_no_spaces_len(char *str)
 {
 	int	i;
+	int	len;
 
 	i = 0;
-	config->map = ft_split(map, '\n');
-	free(map);
-	ft_strmapi_(config->map[0], ft_check_1, config);
-	ft_strmapi_(config->map[config->map_len - 1], ft_check_1, config);
-	while(config->map[i])
+	len = 0;
+	while (str[i])
 	{
-		ft_strmapi_(config->map[i], ft_check_chars, config);
+		if (str[i] != ' ')
+			len++;
 		i++;
 	}
-	config->map_width = ft_get_width(config);
+	return (len);
+}
+void	ft_remove_spaces(t_config *config, char **map)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	i = 0;
+	config->map = malloc((config->map_len + 1) * sizeof(char *));
+	while (map[i])
+	{
+		config->map[i] = malloc(ft_no_spaces_len(map[i]) + 1);
+		j = 0;
+		k = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] != ' ')
+			{
+				config->map[i][k] = map[i][j];
+				k++;
+			}
+			j++;
+		}
+		config->map[i][k] = '\0';
+		i++;
+	}
+	config->map[i] = NULL;
+	ft_free_matrix(map);
+}
+void	ft_parse_map(char *map_, t_config *config)
+{
+	char	**map;
+	int		i;
+
+	i = 0;
+	map = ft_split(map_, '\n');
+	free(map_);
+	ft_strmapi_(map[0], ft_check_1, config);
+	ft_strmapi_(map[config->map_len - 1], ft_check_1, config);
+	while(map[i])
+	{
+		ft_strmapi_(map[i], ft_check_chars, config);
+		i++;
+	}
+	ft_remove_spaces(config, map);
 }
 
 void ft_handle_scene_file(t_config *config, char *path)
@@ -302,7 +348,7 @@ void	ft_player_angle(t_player *player)
 	if (player->angle > 0 && player->angle < 180)
 		player->top = -1;
 	else
-		player->top = 1;	
+		player->top = 1;
 }
 
 void	ft_init_player(t_config *config)

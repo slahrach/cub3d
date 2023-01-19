@@ -86,7 +86,7 @@ typedef struct s_config
 	t_data		*data_mlx;
 	t_player	*player;
 	t_rays		**rays;
-	t_wall		**walls;	
+	t_wall		**walls;
 } t_config;
 
 void	ft_player_angle(t_player *player);
