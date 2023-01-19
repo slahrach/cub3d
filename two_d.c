@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/18 00:18:30 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/19 06:55:25 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ void	draw_player(t_config *config)
 		{
 			if (t1 == 0 && t2 == 0)
 			{
-				config->player->j = config->player->j + config->player->y;
-				config->player->i = config->player->i + config->player->x;
+				config->player->j = config->player->j + config->player->y * 4.0;
+				config->player->i = config->player->i + config->player->x * 4.0;
 			}
 			//mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win ,config->player->i + t2, config->player->j + t1, 0xFF0000);
 			t2++;
@@ -108,7 +108,7 @@ int	ft_check_wall_ray(t_config *config, float xstart, float ystart)
 	int		j;
 
 	i = xstart;
-	j = ystart;	
+	j = ystart;
 	x = 0;
 	if (config->map[(int)j / 28 ][(int)i / 28 ] == '1')
 			return (0);
@@ -268,6 +268,9 @@ void	draw_map(t_config *config)
 	int	j;
 
 	i = 0;
+	mlx_clear_window(config->data_mlx->mlx, config->data_mlx->mlx_win);
+	config->data_mlx->img = mlx_new_image(config->data_mlx->mlx, X, Y);
+	config->data_mlx->addr = mlx_get_data_addr(config->data_mlx->img, &config->data_mlx->bits_per_pixel, &config->data_mlx->line_length,&config->data_mlx->endian);
 	while (i < X)
 	{
 		j = 0;

@@ -14,7 +14,7 @@
 
 void ft_handle_error(char *error)
 {
-	printf("Error: %s\n", error);
+	printf("Error\n%s\n", error);
 	exit(1);
 }
 int	ft_check_existing_element(char *id, t_texture* list)
@@ -64,7 +64,10 @@ int ft_is_color(char **rgb)
 		return (0);
 	while (rgb[i])
 	{
-		atoi = ft_atoi_(rgb[i]);
+		if (rgb[i][0] == '+')
+			atoi = ft_atoi_(rgb[i] + 1);
+		else
+			atoi = ft_atoi_(rgb[i]);
 		if (atoi < 0 || atoi > 255)
 			return (0);
 		if (!atoi && ft_strcmp(rgb[i], "0"))
@@ -73,28 +76,46 @@ int ft_is_color(char **rgb)
 	}
 	return (1);
 }
+int	count_char(char *str, char c)
+{
+	int	i;
+	int	count;
 
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			count++;
+		i++;
+	}
+	return (count);
+}
 void	ft_check_elements(t_config *config, char *element)
 {
 	int			i;
+	char		*color;
 	char		**expec_textures;
 	char		**rgb;
 	char		**info;
 	t_texture	*new;
+	int			k;
 
 	i = 0;
 	expec_textures = ft_split("NO SO EA WE", ' ');
 	info = ft_split(element, ' ');
-	if (ft_get_matrix_size(info) != 2)
-		ft_handle_error("Elements error : too many info");
+	if (!ft_strchr(element, ',') && ft_get_matrix_size(info) != 2)
+		ft_handle_error("more or less info");
+	if ((ft_strchr(element, ',') && count_char(element, ',') != 2))
+		ft_handle_error("extra or missing comma");
 	while (expec_textures[i])
 	{
 		if (!ft_strcmp(expec_textures[i], info[0]))
 		{
 			if(ft_check_existing_element(info[0], config->textures))
-				ft_handle_error("Elements error : element already exist");
+				ft_handle_error("element already exist");
 			if (open(info[1], O_RDONLY) < 0)
-				ft_handle_error("Elements error : cant open texture file");
+				ft_handle_error("cant open texture file");
 			new = ft_texturenew(info[0], info[1]);
 			ft_addtexture_back(&(config->textures), new);
 			ft_free_matrix(expec_textures);
@@ -104,14 +125,21 @@ void	ft_check_elements(t_config *config, char *element)
 	}
 	if (!ft_strcmp(info[0], "C") || !ft_strcmp(info[0], "F"))
 	{
-		rgb = ft_split(info[1], ',');
+		k = 1;
+		color = NULL;
+		while (k < ft_get_matrix_size(info))
+		{
+			color = ft_strjoin1(color, info[k]);
+			k++;
+		}
+		rgb = ft_split(color, ',');
 		if (!ft_is_color(rgb))
-			ft_handle_error("Elements error : Not a valid color");
+			ft_handle_error("Not a valid color");
 		if (!ft_strcmp(info[0], "F"))
 		{
 			if (config->f_color)
-				ft_handle_error("Elements error : f element already exist");
-			config->f_color = info[1];
+				ft_handle_error("f element already exist");
+			config->f_color = color;
 			ft_free_matrix(expec_textures);
 			ft_free_matrix(rgb);
 			return ;
@@ -119,14 +147,14 @@ void	ft_check_elements(t_config *config, char *element)
 		else
 		{
 			if (config->c_color)
-				ft_handle_error("Elements error : c element already exist");
-			config->c_color = info[1];
+				ft_handle_error("c element already exist");
+			config->c_color = color;
 			ft_free_matrix(expec_textures);
 			ft_free_matrix(rgb);
 			return ;
 		}
 	}
-	ft_handle_error("Elements error : Not a valid element");
+	ft_handle_error("Not a valid element");
 }
 
 char *ft_parse_elements(t_config *config, int fd)
@@ -161,8 +189,6 @@ char *ft_parse_elements(t_config *config, int fd)
 				(config->map_len)++;
 			}
 		}
-		if (i == 6)
-			ft_check_missing_elements(config);
 		line = gnl(fd);
 	}
 	return (map);
@@ -200,65 +226,52 @@ int	ft_get_width(t_config *config)
 	}
 	return (len);
 }
-int	ft_no_spaces_len(char *str)
-{
-	int	i;
-	int	len;
 
-	i = 0;
-	len = 0;
-	while (str[i])
-	{
-		if (str[i] != ' ')
-			len++;
-		i++;
-	}
-	return (len);
+void	check(int i, t_config *config)
+{
+
 }
-void	ft_remove_spaces(t_config *config, char **map)
+void	check_surrounding(t_config *config)
 {
 	int	i;
 	int	j;
-	int	k;
 
 	i = 0;
-	config->map = malloc((config->map_len + 1) * sizeof(char *));
-	while (map[i])
+	while (config->map[i])
 	{
-		config->map[i] = malloc(ft_no_spaces_len(map[i]) + 1);
 		j = 0;
-		k = 0;
-		while (map[i][j])
+		while (config->map[i][j])
 		{
-			if (map[i][j] != ' ')
+			if (config->map[i][j] == '0' || config->map[i][j] == config->orientation)
 			{
-				config->map[i][k] = map[i][j];
-				k++;
+				if ((i > 0 && j >= ft_strlen(config->map[i - 1])) 
+					|| (config->map[i - 1][j + 1] == ' '))
+					ft_handle_error("map not surrounded by walls");
+				if (((i < config->map_len - 1) && j >= ft_strlen(config->map[i + 1]))
+					|| (config->map[i + 1][j + 1] == ' '))
+						ft_handle_error("map not surrounded by walls");
 			}
 			j++;
 		}
-		config->map[i][k] = '\0';
 		i++;
 	}
-	config->map[i] = NULL;
-	ft_free_matrix(map);
 }
+
 void	ft_parse_map(char *map_, t_config *config)
 {
-	char	**map;
 	int		i;
 
 	i = 0;
-	map = ft_split(map_, '\n');
+	config->map = ft_split(map_, '\n');
 	free(map_);
-	ft_strmapi_(map[0], ft_check_1, config);
-	ft_strmapi_(map[config->map_len - 1], ft_check_1, config);
-	while(map[i])
+	ft_strmapi_(config->map[0], ft_check_1, config);
+	ft_strmapi_(config->map[config->map_len - 1], ft_check_1, config);
+	while(config->map[i])
 	{
-		ft_strmapi_(map[i], ft_check_chars, config);
+		ft_strmapi_(config->map[i], ft_check_chars, config);
 		i++;
 	}
-	ft_remove_spaces(config, map);
+	check_surrounding(config);
 }
 
 void ft_handle_scene_file(t_config *config, char *path)
@@ -277,6 +290,8 @@ void ft_handle_scene_file(t_config *config, char *path)
 		if (!map)
 			ft_handle_error("Map is Missing");
 		ft_parse_map(map, config);
+		if (!config->orientation)
+			ft_handle_error("...");
 	}
 	else
 		ft_handle_error("Map error: has to be .cub");
@@ -358,10 +373,18 @@ void	ft_init_player(t_config *config)
 }
 int	main(int argc, char** argv)
 {
+	int	i;
 	t_config *game;
 
 	game = ft_init();
 	ft_init_config(game, argc, argv);
 	ft_init_player(game);
+	// i = 0;
+	// while (game->map[i])
+	// {
+	// 	printf("%s", game->map[i]);
+	// 	i++;
+	// }
+	printf("%d\n", game->orientation);
 	ft_raycast(game);
 }

@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/06 19:46:53 by slahrach          #+#    #+#             */
-/*   Updated: 2022/12/05 16:53:13 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/19 04:31:46 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,3 +117,4 @@ void	ft_strmapi_(char const *s, void (*f)(char, t_config *), t_config *config)
 		i++;
 	}
 }
+
