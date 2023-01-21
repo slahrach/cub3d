@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/21 02:16:42 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/21 04:39:10 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void	draw_square(int i, int j, int x, t_config *config)
 		while (t2 <= x * (i + 1))
 		{	
 			if (config->map[j][i] == '1')
-				mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win, t2, t1, 0xFFFFFF);
+				my_mlx_pixel_put(config->data_mlx, t2, t1, 0xFFFFFF);
 			else
-				mlx_pixel_put(config->data_mlx,config->data_mlx->mlx_win, t2, t1, 0x000000);
+				my_mlx_pixel_put(config->data_mlx, t2, t1, 0x000000);
 			t2++;
 		}
 		t1++;
@@ -139,7 +139,7 @@ float    render_ray(t_config *config, int x)
 	i = 0;
     while (ft_check_wall_ray(config, xstart, ystart))
     {
-		//mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,xstart,ystart,0x00FF00);
+		my_mlx_pixel_put(config->data_mlx,xstart,ystart,0x00FF00);
 		ystart += sin(deg_to_rad(config->ray_angle)) / 16;
 		xstart += cos(deg_to_rad(config->ray_angle)) / 16;
 		i++;
@@ -243,9 +243,10 @@ int	key_hook(int keycode, t_config *config)
 		check_angle(config);
 	}
 	ft_player_angle(config->player);
-	draw_map(config);
-	//draw_minimap(config);
+	
 	draw_player(config);
+	draw_map(config);
+	draw_minimap(config);
 	free_rays(config);
 	free_walls(config);
 	int x = 0;
@@ -265,7 +266,7 @@ int	key_hook(int keycode, t_config *config)
 		config->walls[x]->x2 = (Y / 2) + (config->wall_h / 2);
 		x++;
 	}
-	
+	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img.img, 0, 0);
 	return (keycode);
 }
 
@@ -286,10 +287,10 @@ void	draw_map(t_config *config)
 	config->data_mlx->img.addr = mlx_get_data_addr(config->data_mlx->img.img, &config->data_mlx->img.bits_per_pixel, &config->data_mlx->img.line_length,&config->data_mlx->img.endian);
 	while (i < X)
 	{
-		if ((int)config->rays[i]->y % 28 == 0)
-			x_color = (int)config->rays[i]->x % 28;
-		else
+		if ((int)config->rays[i]->x % 28 == 0 || (int)config->rays[i]->x % 28 == 27)
 			x_color = (int)config->rays[i]->y % 28;
+		else
+			x_color = (int)config->rays[i]->x % 28;
 		j = 0;
 		while(j < Y)
 		{
@@ -298,9 +299,12 @@ void	draw_map(t_config *config)
 			else if (j >= config->walls[i]->x1 && j < config->walls[i]->x2)
 			{
 				height = config->walls[i]->x2 - config->walls[i]->x1;
-				y_color = (j - config->walls[i]->x1) * ((float)28 / (height));
+				y_color = ((j + height / 2) - 400) * ((float)28 / (height));
 				color = get_pixel(&config->data_mlx->imgs[0], x_color, y_color);
-				my_mlx_pixel_put(config->data_mlx,i,j,color);
+				if (x_color == 63)
+					my_mlx_pixel_put(config->data_mlx,i,j,0xff0000);
+				else
+					my_mlx_pixel_put(config->data_mlx,i,j,color);
 			}
 			else
 				my_mlx_pixel_put(config->data_mlx,i,j, floor);
@@ -308,33 +312,33 @@ void	draw_map(t_config *config)
 		}
 		i++;
 	}
-	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img.img, 0, 0);
 }
 
 void	ft_raycast(t_config *config)
 {
 	double angle = 60;
-	int		y;
-
-	y = config->map_len * 28;
 	init_window(config);
 	draw_minimap(config);
 	draw_player(config);
 	int x = 0;
+	int	y;
+	y = config->map_len * 64;
 	config->ray_angle = config->player->angle - 30;
 	while (x < X)
 	{
+		
 		config->rays[x] = malloc(sizeof(t_rays));
 		config->walls[x] = malloc(sizeof(t_wall));
 		config->rays[x]->dest = render_ray(config, x);
 		config->rays[x]->ray_angle = config->ray_angle;
 		config->ray_angle += 60.0 / X;
-		config->wall_h = (float)y / config->rays[x]->dest * 64.0;
-		config->walls[x]->x1 = (Y / 2.0) - (config->wall_h / 2.0);
-		config->walls[x]->x2 = (Y / 2.0) + (config->wall_h / 2.0);
+		config->wall_h = ((float)y * 64.0) / (config->rays[x]->dest * cos(deg_to_rad(config->player->angle - config->ray_angle)));
+		config->walls[x]->x1 = (Y / 2) - (config->wall_h / 2);
+		config->walls[x]->x2 = (Y / 2) + (config->wall_h / 2);
 		x++;
 	}
 	draw_map(config);
+	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img.img, 0, 0);
 	mlx_hook(config->data_mlx->mlx_win,3,0, key_hook, config);
 	mlx_hook(config->data_mlx->mlx_win,2,0, key_hook, config);
 	mlx_loop(config->data_mlx->mlx);
