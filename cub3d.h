@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #ifndef CUBE3D_H
 # define CUBE3D_H
 # include "libft/libft.h"
@@ -29,6 +27,10 @@
 # define P_SIZE 1
 # define X 1200
 # define Y 800
+# define NO 0
+# define SO 1
+# define EA 2
+# define WE 3
 
 typedef struct s_player
 {
@@ -41,14 +43,22 @@ typedef struct s_player
 	double	angle;
 } t_player;
 
+typedef struct s_img
+{
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+	int		height;
+	int		width;
+} t_img;
+
 typedef struct	s_data {
-	void		*img;
-	char		*addr;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
     void		*mlx;
 	void		*mlx_win;
+	t_img		imgs[4];
+	t_img		img;
 }				t_data;
 
 typedef struct s_texture
@@ -62,6 +72,8 @@ typedef	struct s_rays
 {
 	float	dest;
 	float	ray_angle;
+	float	x;
+	float	y;
 } t_rays;
 
 
@@ -74,6 +86,7 @@ typedef struct s_wall
 typedef struct s_config
 {
 	t_texture	*textures;
+	char		**tex;
 	double		r;
 	double		ray_angle;
 	char		*c_color;
@@ -89,8 +102,8 @@ typedef struct s_config
 	t_wall		**walls;
 } t_config;
 
-void	ft_player_angle(t_player *player);
-void	draw_player(t_config *config);
+void			ft_player_angle(t_player *player);
+void			draw_player(t_config *config);
 void			ft_addtexture_back(t_texture **head, t_texture *new);
 t_texture		*ft_texturenew(char *id, char *path);
 void			ft_addtexture_front(t_texture **head, t_texture *new);
@@ -101,6 +114,11 @@ void			ft_strmapi_(char const *s, void (*f)(char, t_config *), t_config *config)
 void			ft_check_1(char c, t_config* config);
 char			*get_next_line(int fd);
 void			ft_raycast(t_config *config);
-void	draw_map(t_config *config);
+void			draw_map(t_config *config);
+void			ft_textureclear(t_texture **lst);
+void			init_imgs(t_config *config);
+unsigned int	get_pixel(t_img *image, int x, int y);
+void			ft_free_matrix(char **matrix);
+unsigned int	rgb_to_hex(char	*color);
 
 #endif

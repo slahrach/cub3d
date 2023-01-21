@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/19 06:55:25 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/21 02:16:42 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,21 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	dst = data->img.addr + (y * data->img.line_length + x * (data->img.bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
 
 void	init_window(t_config *config)
 {
+	void	*img;
+	int		width;
+	int		height;
+
 	config->data_mlx->mlx = mlx_init();
 	config->data_mlx->mlx_win = mlx_new_window(config->data_mlx->mlx, X, Y, "Hello world!");
-	config->data_mlx->img = mlx_new_image(config->data_mlx->mlx, X, Y);
-	config->data_mlx->addr = mlx_get_data_addr(config->data_mlx->img, &config->data_mlx->bits_per_pixel, &config->data_mlx->line_length,&config->data_mlx->endian);
+	config->data_mlx->img.img = mlx_new_image(config->data_mlx->mlx, X, Y);
+	config->data_mlx->img.addr = mlx_get_data_addr(config->data_mlx->img.img, &config->data_mlx->img.bits_per_pixel, &config->data_mlx->img.line_length,&config->data_mlx->img.endian);
+	init_imgs(config);
 }
 
 void	draw_square(int i, int j, int x, t_config *config)
@@ -118,7 +123,7 @@ int	ft_check_wall_ray(t_config *config, float xstart, float ystart)
 	return (1);
 }
 
-float    render_ray(t_config *config)
+float    render_ray(t_config *config, int x)
 {
     float	xstart;
 	float	xstart_p;
@@ -139,6 +144,8 @@ float    render_ray(t_config *config)
 		xstart += cos(deg_to_rad(config->ray_angle)) / 16;
 		i++;
     }
+	config->rays[x]->x = xstart;
+	config->rays[x]->y = ystart;
 	return (sqrt(((xstart - xstart_p) * (xstart - xstart_p)) + ((ystart - ystart_p) * (ystart - ystart_p))));
 }
 
@@ -250,7 +257,7 @@ int	key_hook(int keycode, t_config *config)
 		
 		config->rays[x] = malloc(sizeof(t_rays));
 		config->walls[x] = malloc(sizeof(t_wall));
-		config->rays[x]->dest = render_ray(config);
+		config->rays[x]->dest = render_ray(config, x);
 		config->rays[x]->ray_angle = config->ray_angle;
 		config->ray_angle += 60.0 / X;
 		config->wall_h = ((float)y * 64.0) / (config->rays[x]->dest * cos(deg_to_rad(config->player->angle - config->ray_angle)));
@@ -264,32 +271,44 @@ int	key_hook(int keycode, t_config *config)
 
 void	draw_map(t_config *config)
 {
-	int	i;
-	int	j;
+	unsigned int		color;
+	int		height;
+	int		i;
+	int		j;
+	int		x_color;
+	int		y_color;
 
+	int	ceil = rgb_to_hex(config->c_color);
+	int	floor = rgb_to_hex(config->f_color);
 	i = 0;
 	mlx_clear_window(config->data_mlx->mlx, config->data_mlx->mlx_win);
-	config->data_mlx->img = mlx_new_image(config->data_mlx->mlx, X, Y);
-	config->data_mlx->addr = mlx_get_data_addr(config->data_mlx->img, &config->data_mlx->bits_per_pixel, &config->data_mlx->line_length,&config->data_mlx->endian);
+	config->data_mlx->img.img = mlx_new_image(config->data_mlx->mlx, X, Y);
+	config->data_mlx->img.addr = mlx_get_data_addr(config->data_mlx->img.img, &config->data_mlx->img.bits_per_pixel, &config->data_mlx->img.line_length,&config->data_mlx->img.endian);
 	while (i < X)
 	{
+		if ((int)config->rays[i]->y % 28 == 0)
+			x_color = (int)config->rays[i]->x % 28;
+		else
+			x_color = (int)config->rays[i]->y % 28;
 		j = 0;
 		while(j < Y)
 		{
 			if (j < config->walls[i]->x1)
-				my_mlx_pixel_put(config->data_mlx,i,j,0x00FF00);
-			//mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,i,j,0x00FF00);
+				my_mlx_pixel_put(config->data_mlx,i, j, ceil);
 			else if (j >= config->walls[i]->x1 && j < config->walls[i]->x2)
-				my_mlx_pixel_put(config->data_mlx,i,j,0xFF0000);
-			//mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,i,j,0xFF0000);
+			{
+				height = config->walls[i]->x2 - config->walls[i]->x1;
+				y_color = (j - config->walls[i]->x1) * ((float)28 / (height));
+				color = get_pixel(&config->data_mlx->imgs[0], x_color, y_color);
+				my_mlx_pixel_put(config->data_mlx,i,j,color);
+			}
 			else
-				my_mlx_pixel_put(config->data_mlx,i,j,0x0000FF);
-			//mlx_pixel_put(config->data_mlx->mlx,config->data_mlx->mlx_win,i,j,0x0000FF);	
+				my_mlx_pixel_put(config->data_mlx,i,j, floor);
 			j++;
 		}
 		i++;
 	}
-	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img, 0, 0);
+	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img.img, 0, 0);
 }
 
 void	ft_raycast(t_config *config)
@@ -299,7 +318,7 @@ void	ft_raycast(t_config *config)
 
 	y = config->map_len * 28;
 	init_window(config);
-	//draw_minimap(config);
+	draw_minimap(config);
 	draw_player(config);
 	int x = 0;
 	config->ray_angle = config->player->angle - 30;
@@ -307,7 +326,7 @@ void	ft_raycast(t_config *config)
 	{
 		config->rays[x] = malloc(sizeof(t_rays));
 		config->walls[x] = malloc(sizeof(t_wall));
-		config->rays[x]->dest = render_ray(config);
+		config->rays[x]->dest = render_ray(config, x);
 		config->rays[x]->ray_angle = config->ray_angle;
 		config->ray_angle += 60.0 / X;
 		config->wall_h = (float)y / config->rays[x]->dest * 64.0;

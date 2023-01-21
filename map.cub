@@ -1,12 +1,13 @@
 
-C         100,100,0
-WE cub3d.c
-F  89,22,8
+C         204,229,255
+WE white.xpm
+F  128,128,128
 
-EA                  utils.c
-SO        cub3d.h
+EA                  wing.xpm
+SO        oui.xpm
 
-NO  raycast.c
+NO  oui.xpm
+
         1111111111111111111111111
         1000000000110000000000001
         1011000001110000000000001

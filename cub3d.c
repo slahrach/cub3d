@@ -227,10 +227,6 @@ int	ft_get_width(t_config *config)
 	return (len);
 }
 
-void	check(int i, t_config *config)
-{
-
-}
 void	check_surrounding(t_config *config)
 {
 	int	i;
@@ -274,6 +270,27 @@ void	ft_parse_map(char *map_, t_config *config)
 	check_surrounding(config);
 }
 
+char	*find_path(char *orient, t_texture *textures)
+{
+	while(textures)
+	{
+		if (!ft_strcmp(textures->id, orient))
+			return (ft_strdup(textures->path));
+		textures = textures->next;
+	}
+	return (NULL);
+}
+void	textures_array(t_config *config)
+{
+	config->tex = malloc(5 * sizeof(char *));
+	config->tex[NO] = find_path("NO", config->textures);
+	config->tex[SO] = find_path("SO", config->textures);
+	config->tex[EA] = find_path("EA", config->textures);
+	config->tex[WE] = find_path("WE", config->textures);
+	config->tex[4] = NULL;
+	ft_textureclear(&config->textures);
+}
+
 void ft_handle_scene_file(t_config *config, char *path)
 {
 	int		file;
@@ -297,11 +314,35 @@ void ft_handle_scene_file(t_config *config, char *path)
 		ft_handle_error("Map error: has to be .cub");
 }
 
+unsigned int	get_pixel(t_img *image, int x, int y)
+{
+	char	*dst;
+
+	//printf("%s\n",	image->addr);
+	dst = image->addr + (y * image->line_length + x * (image->bits_per_pixel / 8));
+	return (*(unsigned int*)dst);
+}
+
+void	init_imgs(t_config *config)
+{
+	int	i;
+
+	//config->data_mlx->imgs = malloc (4 * sizeof (t_img));
+	i = 0;
+	while (i < 4)
+	{
+		config->data_mlx->imgs[i].img = mlx_xpm_file_to_image(config->data_mlx->mlx, config->tex[i], &config->data_mlx->imgs[i].width, &config->data_mlx->imgs[i].height);
+		config->data_mlx->imgs[i].addr = mlx_get_data_addr(config->data_mlx->imgs[i].img, &config->data_mlx->imgs[i].bits_per_pixel, &config->data_mlx->imgs[i].line_length, &config->data_mlx->imgs[i].endian);
+		i++;
+	}
+}
+
 void ft_init_config (t_config *config, int ac, char **av)
 {
 	if (ac < 2)
 		ft_handle_error("Need: [map].cub");
 	ft_handle_scene_file(config, av[1]);
+	textures_array(config);
 }
 
 t_config	*ft_init()
@@ -337,7 +378,7 @@ void	ft_player_info(t_config *config)
 			{
 				config->player->i = (i * SIZE) + (SIZE / 2);
 				config->player->j = (j * SIZE) + (SIZE / 2);
-				printf("%d %d sss\n",config->player->i,config->player->j);
+				//printf("%d %d sss\n",config->player->i,config->player->j);
 				if (config->orientation == 'N')
 					config->player->angle = (270);
 				else if (config->orientation == 'S')
@@ -379,12 +420,11 @@ int	main(int argc, char** argv)
 	game = ft_init();
 	ft_init_config(game, argc, argv);
 	ft_init_player(game);
-	// i = 0;
-	// while (game->map[i])
-	// {
-	// 	printf("%s", game->map[i]);
-	// 	i++;
-	// }
-	printf("%d\n", game->orientation);
+	i = 0;
+	while (game->tex[i])
+	{
+		printf("%s\n", game->tex[i]);
+		i++;
+	}
 	ft_raycast(game);
 }

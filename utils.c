@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/06 19:46:53 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/19 04:31:46 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/21 01:32:21 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,3 +118,28 @@ void	ft_strmapi_(char const *s, void (*f)(char, t_config *), t_config *config)
 	}
 }
 
+void	ft_textureclear(t_texture **lst)
+{
+	t_texture	*temp;
+
+	if (!(*lst))
+		return ;
+	while (*lst != NULL)
+	{
+		temp = (*lst)->next;
+		free((*lst)->id);
+		free((*lst)->path);
+		free(*lst);
+		*lst = temp;
+	}
+	lst = NULL;
+}
+
+unsigned int	rgb_to_hex(char	*color)
+{
+	unsigned int	hex;
+	char			**rgb;
+
+	rgb = ft_split(color, ',');
+	return (atoi(rgb[0]) << 16 | atoi(rgb[1]) << 8 | atoi(rgb[2]));
+}
