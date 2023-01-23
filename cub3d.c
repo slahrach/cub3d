@@ -353,17 +353,16 @@ t_config	*ft_init()
 	game->textures = NULL;
 	game->f_color = NULL;
 	game->c_color = NULL;
-	game->data_mlx = malloc (sizeof (t_data *));
+	game->data_mlx = malloc (sizeof (t_data));
 	game->map_len = 0;
 	game->orientation = 0;
 	game->r = M_PI_2;
-	game->player = malloc(sizeof(t_player));
 	game->rays = malloc(sizeof(t_rays *) * X);
 	game->walls = malloc(sizeof(t_wall *) * X);
 	return (game);
 }
 
-void	ft_player_info(t_config *config)
+void	ft_player_info(t_player *player, t_config *config)
 {
 	int	i;
 	int	j;
@@ -376,23 +375,25 @@ void	ft_player_info(t_config *config)
 		{
 			if(config->map[j][i] == config->orientation)
 			{
-				config->player->i = (i * SIZE) + (SIZE / 2);
-				config->player->j = (j * SIZE) + (SIZE / 2);
-				//printf("%d %d sss\n",config->player->i,config->player->j);
+				player->i = (i * SIZE) + (SIZE / 2);
+				player->j = (j * SIZE) + (SIZE / 2);
+				printf("adasda\n");
+				printf("%f  %f sss\n",player->i,player->j);
 				if (config->orientation == 'N')
-					config->player->angle = (270);
+					player->angle = (270);
 				else if (config->orientation == 'S')
-					config->player->angle = 90;
+					player->angle = 90;
 				else if (config->orientation == 'W')
-					config->player->angle = 180;
+					player->angle = 180;
 				else if (config->orientation == 'E')
-					config->player->angle = 0;
+					player->angle = 0;
 			}
 			i++;
 		}
 		j++;
 	}
-	
+	player->x = 0;
+	player->y = 0;
 }
 
 int	ft_ray_orientation(t_rays *ray)
@@ -434,10 +435,14 @@ void	ft_player_angle(t_player *player)
 		player->top = 1;
 }
 
-void	ft_init_player(t_config *config)
+t_player	*ft_init_player(t_config *config)
 {
-	ft_player_info(config);
-	ft_player_angle(config->player);
+	t_player	*player;
+
+	player = malloc(sizeof(t_player));
+	ft_player_info(player, config);
+	ft_player_angle(player);
+	return (player);
 }
 int	main(int argc, char** argv)
 {
@@ -446,12 +451,13 @@ int	main(int argc, char** argv)
 
 	game = ft_init();
 	ft_init_config(game, argc, argv);
-	ft_init_player(game);
+	game->player = ft_init_player(game);
 	i = 0;
-	while (game->tex[i])
-	{
-		printf("%s\n", game->tex[i]);
-		i++;
-	}
+	// while (game->tex[i])
+	// {
+	// 	printf("%s\n", game->tex[i]);
+	// 	i++;
+	// }
+	//printf("%f %f aaa\n",game->player->i, game->player->j);
 	ft_raycast(game);
 }

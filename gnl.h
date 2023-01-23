@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gnl.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 11:22:18 by slahrach          #+#    #+#             */
-/*   Updated: 2022/11/21 11:34:38 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/23 02:36:23 by kessalih         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdio.h>
-
+# include <mlx.h>
 size_t		ft_strlen1(char *s);
 char		*ft_strnchr(char *s, int c, int *i);
 char		*ft_strjoin1(char *s1, char *s2);

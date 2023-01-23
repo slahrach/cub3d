@@ -6,7 +6,7 @@
 #    By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/06 19:47:07 by slahrach          #+#    #+#              #
-#    Updated: 2023/01/23 02:26:37 by kessalih         ###   ########.fr        #
+#    Updated: 2023/01/23 02:38:10 by kessalih         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIBFT = ./libft
 
 SRCS =  cub3d.c gnl.c gnl_utils.c utils.c two_d.c
 
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror
 
 CLINKS = -lmlx -framework OpenGL -framework AppKit
 

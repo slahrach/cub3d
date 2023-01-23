@@ -6,7 +6,7 @@
 /*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/23 02:32:01 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/23 03:51:15 by kessalih         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,8 @@ int ft_check_wall_ray2(t_config *config, float xstart, float ystart)
 }
 
 int	ft_check_wall_ray(t_config *config, float xstart, float ystart)
-{
-	int		i;
-	int		j;
-
-	i = xstart;
-	j = ystart;
-	if (config->map[(int)j / 28 ][(int)i / 28 ] == '1' || ft_check_wall_ray2(config, xstart, ystart))
+{	
+	if (config->map[(int)ystart / 28 ][(int)xstart / 28 ] == '1')
 		return (0);
 	return (1);
 }
@@ -133,14 +128,17 @@ float    render_ray(t_config *config, int x)
 	xstart_p = config->player->i + cos(deg_to_rad(config->player->angle));
     ystart = config->player->j + sin(deg_to_rad(config->player->angle));
 	ystart_p = config->player->j + sin(deg_to_rad(config->player->angle));
+	printf("heree %f   %f   %f\n", config->player->i, config->player->j, config->player->angle);
 	i = 0;
     while (ft_check_wall_ray(config, xstart, ystart))
     {
-		my_mlx_pixel_put(config->data_mlx,xstart,ystart,0x00FF00);
+		//my_mlx_pixel_put(config->data_mlx,xstart,ystart,0x00FF00);
 		ystart += sin(deg_to_rad(config->ray_angle)) / 16;
 		xstart += cos(deg_to_rad(config->ray_angle)) / 16;
+		//printf("%f %f\n",xstart, ystart);
 		i++;
     }
+	
 	config->rays[x]->x = xstart;
 	config->rays[x]->y = ystart;
 	return (sqrt(((xstart - xstart_p) * (xstart - xstart_p)) + ((ystart - ystart_p) * (ystart - ystart_p))));
@@ -327,6 +325,7 @@ int	e_hook(t_config *config)
 void	ft_raycast(t_config *config)
 {
 	init_window(config);
+	printf("%f %f aaa\n",config->player->i, config->player->j);
 	draw_player(config);
 	draw_game(config);
 	mlx_key_hook(config->data_mlx->mlx_win, key_hook, config);
