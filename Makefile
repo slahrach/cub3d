@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+         #
+#    By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/06 19:47:07 by slahrach          #+#    #+#              #
-#    Updated: 2023/01/18 00:16:50 by slahrach         ###   ########.fr        #
+#    Updated: 2023/01/23 02:26:37 by kessalih         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ all : ${NAME}
 
 ${NAME} : ${OBJS}
 	Make -C ${LIBFT}
-	${CC} ${OBJS} ${LIB} -lmlx -framework OpenGL -framework AppKit -fsanitize=address -o ${NAME}
+	${CC} ${OBJS} ${LIB} -lmlx -framework OpenGL -framework AppKit -o ${NAME}
 
 clean :
 	Make clean -C ${LIBFT}
