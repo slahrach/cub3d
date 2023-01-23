@@ -4,7 +4,7 @@ WE text.xpm
 F  128,128,128
 
 EA                  wall.xpm
-SO        brick.xpm
+SO        text.xpm
 
 NO  rick.xpm
 

@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 10:37:00 by slahrach          #+#    #+#             */
-/*   Updated: 2022/11/21 11:37:30 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/23 09:13:39 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static	char	*funct(char **store, char *buf, int fd, int *pr)
 				*store = NULL;
 			return (line);
 		}
-		*pr = read(fd, buf,1);
+		*pr = read(fd, buf, 1);
 	}
 	return (NULL);
 }

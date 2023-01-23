@@ -6,12 +6,11 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/06 19:46:53 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/21 01:32:21 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/23 09:11:27 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
 
 void	ft_addtexture_back(t_texture **head, t_texture *new)
 {
@@ -28,7 +27,6 @@ void	ft_addtexture_back(t_texture **head, t_texture *new)
 			ft_addtexture_front(head, new);
 	}
 }
-
 
 void	ft_addtexture_front(t_texture **head, t_texture *new)
 {
@@ -58,7 +56,6 @@ t_texture	*ft_texturenew(char *id, char *path)
 	return (lst);
 }
 
-
 int	ft_texturesize(t_texture *lst)
 {
 	int	counter;
@@ -70,76 +67,4 @@ int	ft_texturesize(t_texture *lst)
 		lst = lst->next;
 	}
 	return (counter);
-}
-
-int	ft_atoi_(const char *str)
-{
-	int		sign;
-	size_t	nbr;
-
-	sign = 1;
-	nbr = 0;
-	while ((*str >= 9 && *str <= 13) || *str == ' ')
-		str++;
-	if (*str == '+' || *str == '-')
-	{
-		if (*str == '-')
-			sign *= -1;
-		str++;
-	}
-	while (*str >= '0' && *str <= '9' )
-	{
-		nbr = (nbr * 10) + (*str - '0');
-		str++;
-	}
-	if (*str)
-		return (0);
-	return ((sign * nbr));
-}
-
-void	ft_strmapi_(char const *s, void (*f)(char, t_config *), t_config *config)
-{
-	char			*str;
-	unsigned int	i;
-	size_t			l;
-
-	if (!s)
-		return ;
-	l = ft_strlen(s);
-	if (l < 1)
-		return ;
-	ft_check_1(s[0], config);
-	ft_check_1(s[l - 1], config);
-	i = 0;
-	while (s[i])
-	{
-		f(s[i], config);
-		i++;
-	}
-}
-
-void	ft_textureclear(t_texture **lst)
-{
-	t_texture	*temp;
-
-	if (!(*lst))
-		return ;
-	while (*lst != NULL)
-	{
-		temp = (*lst)->next;
-		free((*lst)->id);
-		free((*lst)->path);
-		free(*lst);
-		*lst = temp;
-	}
-	lst = NULL;
-}
-
-unsigned int	rgb_to_hex(char	*color)
-{
-	unsigned int	hex;
-	char			**rgb;
-
-	rgb = ft_split(color, ',');
-	return (atoi(rgb[0]) << 16 | atoi(rgb[1]) << 8 | atoi(rgb[2]));
 }

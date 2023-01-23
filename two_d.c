@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   two_d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
+/*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/23 03:51:15 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/23 09:17:10 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ void	draw_minimap(t_config *config)
 		}
 		j++;
 	}
-	
 }
 
 double	deg_to_rad(double x)
@@ -89,56 +88,51 @@ double	deg_to_rad(double x)
 	return (x / 180 * M_PI);
 }
 
-int ft_check_wall_ray2(t_config *config, float xstart, float ystart)
+int	ft_check_wall_ray2(t_config *config, float xstart, float ystart)
 {
 	float	x;
 	float	y;
 
-	y = sin(deg_to_rad(config->ray_angle));	
+	y = sin(deg_to_rad(config->ray_angle));
 	x = cos(deg_to_rad(config->ray_angle));
-	if (config->map[(int)(ystart + y) / 28 ][(int)(xstart) / 28 ] == '1' && config->map[(int)(ystart) / 28 ][(int)(xstart + x) / 28 ] == '1')
+	if (config->map[(int)(ystart + y) / 28][(int)(xstart) / 28] == '1' && config->map[(int)(ystart) / 28][(int)(xstart + x) / 28] == '1')
 		return (1);
-	else if (config->map[(int)(ystart - y) / 28 ][(int)(xstart) / 28 ] == '1' && config->map[(int)(ystart) / 28 ][(int)(xstart - x) / 28 ] == '1')
+	else if (config->map[(int)(ystart - y) / 28][(int)(xstart) / 28] == '1' && config->map[(int)(ystart) / 28 ][(int)(xstart - x) / 28] == '1')
 		return (1);
-	else if (config->map[(int)(ystart + y) / 28 ][(int)(xstart) / 28 ] == '1' && config->map[(int)(ystart) / 28 ][(int)(xstart - x) / 28 ] == '1')
+	else if (config->map[(int)(ystart + y) / 28][(int)(xstart) / 28] == '1' && config->map[(int)(ystart) / 28][(int)(xstart - x) / 28] == '1')
 		return (1);
-	else if (config->map[(int)(ystart - y) / 28 ][(int)(xstart) / 28 ] == '1' && config->map[(int)(ystart) / 28 ][(int)(xstart + x) / 28 ] == '1')
+	else if (config->map[(int)(ystart - y) / 28][(int)(xstart) / 28] == '1' && config->map[(int)(ystart) / 28][(int)(xstart + x) / 28] == '1')
 		return (1);
 	else
-		return (0);	
+		return (0);
 }
 
 int	ft_check_wall_ray(t_config *config, float xstart, float ystart)
 {	
-	if (config->map[(int)ystart / 28 ][(int)xstart / 28 ] == '1')
+	if (config->map[(int)ystart / 28][(int)xstart / 28] == '1')
 		return (0);
 	return (1);
 }
 
-float    render_ray(t_config *config, int x)
+float	render_ray(t_config *config, int x)
 {
-    float	xstart;
+	float	xstart;
 	float	xstart_p;
-    float	ystart;
+	float	ystart;
 	float	ystart_p;
 	int		i;
 
-	
-    xstart = config->player->i + cos(deg_to_rad(config->player->angle));
+	xstart = config->player->i + cos(deg_to_rad(config->player->angle));
 	xstart_p = config->player->i + cos(deg_to_rad(config->player->angle));
-    ystart = config->player->j + sin(deg_to_rad(config->player->angle));
+	ystart = config->player->j + sin(deg_to_rad(config->player->angle));
 	ystart_p = config->player->j + sin(deg_to_rad(config->player->angle));
-	printf("heree %f   %f   %f\n", config->player->i, config->player->j, config->player->angle);
 	i = 0;
-    while (ft_check_wall_ray(config, xstart, ystart))
-    {
-		//my_mlx_pixel_put(config->data_mlx,xstart,ystart,0x00FF00);
+	while (ft_check_wall_ray(config, xstart, ystart))
+	{
 		ystart += sin(deg_to_rad(config->ray_angle)) / 16;
 		xstart += cos(deg_to_rad(config->ray_angle)) / 16;
-		//printf("%f %f\n",xstart, ystart);
 		i++;
-    }
-	
+	}
 	config->rays[x]->x = xstart;
 	config->rays[x]->y = ystart;
 	return (sqrt(((xstart - xstart_p) * (xstart - xstart_p)) + ((ystart - ystart_p) * (ystart - ystart_p))));
@@ -149,7 +143,7 @@ int	ft_check_wall(t_config *config, int deg, int s)
 	float	i;
 	float	j;
 	int		x;
-	
+
 	i = config->player->i;
 	j = config->player->j;
 	x = 0;
@@ -176,7 +170,6 @@ void	free_rays(t_config *config)
 	}
 }
 
-
 void	free_walls(t_config *config)
 {
 	int	i;
@@ -188,6 +181,7 @@ void	free_walls(t_config *config)
 		i++;
 	}
 }
+
 void	check_angle(t_config *config)
 {
 	if (config->player->angle > 360)
@@ -198,13 +192,12 @@ void	check_angle(t_config *config)
 
 void	draw_game(t_config *config)
 {
-	int x = 0;
+	int	x = 0;
 	int	y;
 	y = config->map_len * 28;
 	config->ray_angle = config->player->angle - 30;
 	while (x < X)
 	{
-		
 		config->rays[x] = malloc(sizeof(t_rays));
 		config->walls[x] = malloc(sizeof(t_wall));
 		config->rays[x]->dest = render_ray(config, x);
@@ -227,21 +220,21 @@ int	key_hook(int keycode, t_config *config)
 	{
 		if (ft_check_wall(config, 90, 1) == 0)
 			return (keycode);
-        config->player->x = cos(deg_to_rad(config->player->angle + 90));
+		config->player->x = cos(deg_to_rad(config->player->angle + 90));
 		config->player->y = sin(deg_to_rad(config->player->angle + 90));
 	}
 	else if (keycode == 0) // A
 	{
 		if (ft_check_wall(config, 90, -1) == 0)
 			return (keycode);
-        config->player->x = cos(deg_to_rad(config->player->angle + 90)) * -1;
+		config->player->x = cos(deg_to_rad(config->player->angle + 90)) * -1;
 		config->player->y = sin(deg_to_rad(config->player->angle + 90)) * -1;
 	}
     else if (keycode == 13) //W
 	{
 		if (ft_check_wall(config, 0, 1) == 0)
 			return (keycode);
-        config->player->x = cos(deg_to_rad(config->player->angle));
+		config->player->x = cos(deg_to_rad(config->player->angle));
 		config->player->y = sin(deg_to_rad(config->player->angle));
 	}
     else if (keycode == 1) // S
@@ -257,14 +250,14 @@ int	key_hook(int keycode, t_config *config)
 		config->player->angle = config->player->angle - 10;
 	else if (keycode == 53)
 	{
-		mlx_clear_window(config->data_mlx->mlx,config->data_mlx->mlx_win);
+		mlx_clear_window(config->data_mlx->mlx, config->data_mlx->mlx_win);
 		exit(0);
 	}
 	check_angle(config);
 	ft_player_angle(config->player);
-	
+
 	draw_player(config);
-	
+
 	//draw_minimap(config);
 	free_rays(config);
 	free_walls(config);
@@ -318,17 +311,17 @@ void	draw_map(t_config *config)
 
 int	e_hook(t_config *config)
 {
-	mlx_clear_window(config->data_mlx->mlx,config->data_mlx->mlx_win);
+	mlx_clear_window(config->data_mlx->mlx, config->data_mlx->mlx_win);
+	//while (1);
 	exit(0);
 }
 
 void	ft_raycast(t_config *config)
 {
 	init_window(config);
-	printf("%f %f aaa\n",config->player->i, config->player->j);
 	draw_player(config);
 	draw_game(config);
 	mlx_key_hook(config->data_mlx->mlx_win, key_hook, config);
-	mlx_hook(config->data_mlx->mlx_win,17,0, e_hook, config);
+	mlx_hook(config->data_mlx->mlx_win, 17, 0, e_hook, config);
 	mlx_loop(config->data_mlx->mlx);
 }
