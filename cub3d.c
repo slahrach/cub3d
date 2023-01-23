@@ -283,10 +283,10 @@ char	*find_path(char *orient, t_texture *textures)
 void	textures_array(t_config *config)
 {
 	config->tex = malloc(5 * sizeof(char *));
-	config->tex[NO] = find_path("NO", config->textures);
-	config->tex[SO] = find_path("SO", config->textures);
-	config->tex[EA] = find_path("EA", config->textures);
-	config->tex[WE] = find_path("WE", config->textures);
+	config->tex[N] = find_path("NO", config->textures);
+	config->tex[S] = find_path("SO", config->textures);
+	config->tex[E] = find_path("EA", config->textures);
+	config->tex[W] = find_path("WE", config->textures);
 	config->tex[4] = NULL;
 	ft_textureclear(&config->textures);
 }
@@ -395,6 +395,33 @@ void	ft_player_info(t_config *config)
 	
 }
 
+int	ft_ray_orientation(t_rays *ray)
+{
+	if (ray->ray_angle >= 0 && ray->ray_angle <= 180)
+	{
+		if ((int)ray->y % 28 == 0 || (int)ray->y % 28 == 27)
+			return (0);
+		else
+		{
+			if (ray->ray_angle >= 0 && ray->ray_angle < 90)
+				return (2);
+			else
+				return (3);
+		}
+	}
+	else
+	{
+		if ((int)ray->y % 28 == 0 || (int)ray->y % 28 == 27)
+			return (1);
+		else
+		{
+			if (ray->ray_angle > 180 && ray->ray_angle < 270)
+				return (3);
+			else
+				return (2);
+		}
+	}
+}
 void	ft_player_angle(t_player *player)
 {
 	if (player->angle > 270 || player->angle < 90)

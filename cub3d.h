@@ -27,10 +27,10 @@
 # define P_SIZE 1
 # define X 1200
 # define Y 800
-# define NO 0
-# define SO 1
-# define EA 2
-# define WE 3
+# define N 0
+# define S 1
+# define E 2
+# define W 3
 
 typedef struct s_player
 {
@@ -120,5 +120,6 @@ void			init_imgs(t_config *config);
 unsigned int	get_pixel(t_img *image, int x, int y);
 void			ft_free_matrix(char **matrix);
 unsigned int	rgb_to_hex(char	*color);
+int				ft_ray_orientation(t_rays *ray);
 
 #endif

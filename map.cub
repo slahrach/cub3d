@@ -1,10 +1,10 @@
 
 C         204,229,255
-WE wall.xpm
+WE text.xpm
 F  128,128,128
 
 EA                  wall.xpm
-SO        wall.xpm
+SO        brick.xpm
 
 NO  rick.xpm
 

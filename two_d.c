@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/21 04:39:10 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/23 01:57:19 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int	ft_check_wall(t_config *config, int deg, int s)
 	i = config->player->i;
 	j = config->player->j;
 	x = 0;
-	while (x < 5)
+	while (x < 10)
 	{
 		if (config->map[(int)j / 28][(int)i / 28] == '1')
 			return (0);
@@ -245,8 +245,8 @@ int	key_hook(int keycode, t_config *config)
 	ft_player_angle(config->player);
 	
 	draw_player(config);
-	draw_map(config);
-	draw_minimap(config);
+	
+	//draw_minimap(config);
 	free_rays(config);
 	free_walls(config);
 	int x = 0;
@@ -266,6 +266,7 @@ int	key_hook(int keycode, t_config *config)
 		config->walls[x]->x2 = (Y / 2) + (config->wall_h / 2);
 		x++;
 	}
+	draw_map(config);
 	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img.img, 0, 0);
 	return (keycode);
 }
@@ -300,7 +301,7 @@ void	draw_map(t_config *config)
 			{
 				height = config->walls[i]->x2 - config->walls[i]->x1;
 				y_color = ((j + height / 2) - 400) * ((float)28 / (height));
-				color = get_pixel(&config->data_mlx->imgs[0], x_color, y_color);
+				color = get_pixel(&config->data_mlx->imgs[ft_ray_orientation(config->rays[i])], x_color, y_color);
 				if (x_color == 63)
 					my_mlx_pixel_put(config->data_mlx,i,j,0xff0000);
 				else
@@ -318,7 +319,7 @@ void	ft_raycast(t_config *config)
 {
 	double angle = 60;
 	init_window(config);
-	draw_minimap(config);
+	//draw_minimap(config);
 	draw_player(config);
 	int x = 0;
 	int	y;
@@ -340,6 +341,6 @@ void	ft_raycast(t_config *config)
 	draw_map(config);
 	mlx_put_image_to_window(config->data_mlx->mlx, config->data_mlx->mlx_win, config->data_mlx->img.img, 0, 0);
 	mlx_hook(config->data_mlx->mlx_win,3,0, key_hook, config);
-	mlx_hook(config->data_mlx->mlx_win,2,0, key_hook, config);
+	//mlx_hook(config->data_mlx->mlx_win,2,0, key_hook, config);
 	mlx_loop(config->data_mlx->mlx);
 }
