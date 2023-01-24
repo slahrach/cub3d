@@ -78,8 +78,8 @@ typedef struct s_rays
 
 typedef struct s_wall
 {
-	int	x1;
-	int	x2;
+	int		x1;
+	int		x2;
 }	t_wall;
 
 typedef struct s_config
@@ -100,7 +100,18 @@ typedef struct s_config
 	t_rays		**rays;
 	t_wall		**walls;
 }	t_config;
-
+void			free_rays(t_config *config);
+void			free_walls(t_config *config);
+void			check_angle(t_config *config);
+int				ft_check_wall(t_config *config, int deg, int s);
+int				ft_check_wall_ray(t_config *config, float xstart, float ystart);
+double			deg_to_rad(double x);
+void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void			draw_game(t_config *config);
+int				e_hook(t_config *config);
+int				draw_game_hook(t_config *config);
+int				key_hook(int keycode, t_config *config);
+int				key_hook2(t_config *config, int deg, int s);
 void			ft_init_player(t_config *config);
 void			ft_init_config(t_config *config, int ac, char **av);
 void			ft_handle_scene_file(t_config *config, char *path);
