@@ -1,29 +1,38 @@
 /* ************************************************************************** */
-/*									                                        */
+/*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.c                                            :+:      :+:    :+:   */
+/*   draw_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/06 19:45:47 by slahrach          #+#    #+#             */
-/*   Updated: 2022/11/21 12:16:39 by slahrach         ###   ########.fr       */
+/*   Created: 2023/01/24 06:03:23 by slahrach          #+#    #+#             */
+/*   Updated: 2023/01/24 06:39:51 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	ft_handle_error(char *error)
+void	free_rays(t_config *config)
 {
-	printf("Error\n%s\n", error);
-	exit(1);
+	int	i;
+
+	i = 0;
+	while (i < X)
+	{
+		free(config->rays[i]);
+		i++;
+	}
 }
 
-int	main(int argc, char	**argv)
+void	free_walls(t_config *config)
 {
-	t_config	*game;
+	int	i;
 
-	game = ft_init();
-	ft_init_config(game, argc, argv);
-	ft_init_player(game);
-	ft_raycast(game);
+	i = 0;
+	while (i < X)
+	{
+		free(config->walls[i]);
+		i++;
+	}
 }
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
+/*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 03:19:22 by kessalih          #+#    #+#             */
-/*   Updated: 2023/01/24 04:05:39 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/24 06:40:35 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,16 @@ void	draw_minimap(t_config *config)
 
 	i = 0;
 	j = 0;
-	x = 28;
+	x = SIZE;
 	while (config->map[j])
 	{
 		i = 0;
-		x = 28;
+		x = SIZE;
 		while (config->map[j][i])
 		{
-			draw_square(i, j, 28, config);
+			draw_square(i, j, SIZE, config);
 			i++;
-			x = x + 28;
+			x = x + SIZE;
 		}
 		j++;
 	}
@@ -94,7 +94,7 @@ void	draw_game(t_config *config)
 	float	angle;
 
 	x = 0;
-	y = config->map_len * 28;
+	y = config->map_len * SIZE;
 	config->ray_angle = config->player->angle - 30;
 	while (x < X)
 	{

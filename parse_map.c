@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 08:40:19 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/23 09:08:45 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/24 06:47:41 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,26 +36,26 @@ void	check_surrounding(t_config *config)
 	int	i;
 	int	j;
 
-	i = 0;
-	while (config->map[i])
+	i = -1;
+	while (config->map[++i])
 	{
-		j = 0;
-		while (config->map[i][j])
+		j = -1;
+		while (config->map[i][++j])
 		{
 			if (config->map[i][j] == '0'
 				|| config->map[i][j] == config->orientation)
 			{
-				if ((i > 0 && j >= ft_strlen(config->map[i - 1])) 
-					|| (config->map[i - 1][j + 1] == ' '))
+				if ((i > 0 && j >= ft_strlen(config->map[i - 1]) - 1)
+					|| (config->map[i - 1][j + 1] == ' ')
+					|| (config->map[i - 1][j - 1] == ' '))
 					ft_handle_error("map not surrounded by walls");
 				if (((i < config->map_len - 1)
-						&& j >= ft_strlen(config->map[i + 1]))
-					|| (config->map[i + 1][j + 1] == ' '))
+						&& j >= ft_strlen(config->map[i + 1]) - 1)
+					|| (config->map[i + 1][j + 1] == ' ')
+					|| (config->map[i + 1][j - 1] == ' '))
 					ft_handle_error("map not surrounded by walls");
 			}
-			j++;
 		}
-		i++;
 	}
 }
 

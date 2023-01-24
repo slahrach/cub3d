@@ -23,7 +23,7 @@
 # include <limits.h>
 # include <math.h>
 
-# define SIZE 28
+# define SIZE 64
 # define P_SIZE 1
 # define X 1200
 # define Y 800
@@ -86,7 +86,6 @@ typedef struct s_config
 {
 	t_texture	*textures;
 	char		**tex;
-	double		r;
 	double		ray_angle;
 	char		*c_color;
 	char		*f_color;
@@ -99,7 +98,11 @@ typedef struct s_config
 	t_player	*player;
 	t_rays		**rays;
 	t_wall		**walls;
+	int			c;
+	int			f;
 }	t_config;
+
+t_config		*ft_init(void);
 void			free_rays(t_config *config);
 void			free_walls(t_config *config);
 void			check_angle(t_config *config);
@@ -145,7 +148,6 @@ void			textures_array(t_config *config);
 char			*find_path(char *orient, t_texture *textures);
 void			ft_handle_error(char *error);
 int				ft_get_matrix_size(char **matrix);
-//int				ft_get_width(t_config *config);
 void			ft_free_matrix(char **matrix);
 int				ft_check_existing_element(char *id, t_texture *list);
 

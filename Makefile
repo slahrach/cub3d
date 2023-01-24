@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+         #
+#    By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/06 19:47:07 by slahrach          #+#    #+#              #
-#    Updated: 2023/01/24 03:28:30 by kessalih         ###   ########.fr        #
+#    Updated: 2023/01/24 06:04:03 by slahrach         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,9 @@ LIB = libft/libft.a
 
 LIBFT = ./libft
 
-SRCS =  cub3d.c gnl.c gnl_utils.c lists_utils.c utils1.c utils2.c two_d.c init.c parse_elem.c parse_map.c textures_utils.c \
-	draw.c hook.c check.c
+SRCS =  cub3d.c gnl.c gnl_utils.c lists_utils.c utils1.c utils2.c \
+		two_d.c init.c parse_elem.c parse_map.c textures_utils.c \
+		draw.c hook.c check.c parse.c draw_utils.c
 
 CFLAGS = -Wall -Wextra -Werror
 

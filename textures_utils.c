@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 08:56:12 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/23 09:26:25 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/24 06:38:11 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,19 @@ unsigned int	get_pixel(t_img *image, int x, int y)
 
 int	ft_ray_orientation(t_rays *ray)
 {
-	if ((int)ray->y % SIZE == 0 || (int)ray->y % SIZE == SIZE - 1)
+	if ((int)ray->x % SIZE == 0 || (int)ray->x % SIZE == SIZE - 1)
 	{
-		if (ray->ray_angle >= 0 || ray->ray_angle < 180)
-			return (0);
+		if (ray->ray_angle < 90 || ray->ray_angle > 270)
+			return (2);
 		else
-			return (1);
+			return (3);
 	}
 	else
 	{
-		if (ray->ray_angle >= 90 || ray->ray_angle < 270)
-			return (3);
+		if (ray->ray_angle > 0 && ray->ray_angle < 180)
+			return (1);
 		else
-			return (2);
+			return (0);
 	}
 }
 
@@ -61,6 +61,8 @@ void	init_imgs(t_config *config)
 			= mlx_xpm_file_to_image(config->data_mlx->mlx,
 				config->tex[i], &config->data_mlx->imgs[i].width,
 				&config->data_mlx->imgs[i].height);
+		if (!config->data_mlx->imgs[i].img)
+			ft_handle_error("image not XPM");
 		config->data_mlx->imgs[i].addr
 			= mlx_get_data_addr(config->data_mlx->imgs[i].img,
 				&config->data_mlx->imgs[i].bits_per_pixel,

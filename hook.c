@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hook.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kessalih <kessalih@student.42.fr>          +#+  +:+       +#+        */
+/*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 03:21:16 by kessalih          #+#    #+#             */
-/*   Updated: 2023/01/24 04:06:54 by kessalih         ###   ########.fr       */
+/*   Updated: 2023/01/24 06:40:58 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int	key_hook(int keycode, t_config *config)
 
 int	draw_game_hook(t_config *config)
 {
-	ft_player_angle(config->player);
 	free_rays(config);
 	free_walls(config);
 	draw_game(config);

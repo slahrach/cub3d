@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 06:27:00 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/23 06:52:02 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/24 06:48:22 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,6 @@ void	ft_init_config(t_config *config, int ac, char **av)
 		ft_handle_error("Need: [map].cub");
 	ft_handle_scene_file(config, av[1]);
 	textures_array(config);
-}
-
-void	ft_player_angle(t_player *player)
-{
-	if (player->angle > 270 || player->angle < 90)
-		player->left = -1;
-	else
-		player->left = 1;
-	if (player->angle > 0 && player->angle < 180)
-		player->top = -1;
-	else
-		player->top = 1;
 }
 
 static void	ft_init_player_info(t_config *config, int i, int j)
@@ -72,5 +60,21 @@ void	ft_player_info(t_config *config)
 void	ft_init_player(t_config *config)
 {
 	ft_player_info(config);
-	ft_player_angle(config->player);
+}
+
+t_config	*ft_init(void)
+{
+	t_config	*game;
+
+	game = malloc(sizeof(t_config));
+	game->textures = NULL;
+	game->f_color = NULL;
+	game->c_color = NULL;
+	game->data_mlx = malloc (sizeof (t_data));
+	game->player = malloc(sizeof(t_player));
+	game->map_len = 0;
+	game->orientation = 0;
+	game->rays = malloc(sizeof(t_rays *) * X);
+	game->walls = malloc(sizeof(t_wall *) * X);
+	return (game);
 }
