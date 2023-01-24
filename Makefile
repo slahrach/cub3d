@@ -6,11 +6,11 @@
 #    By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/06 19:47:07 by slahrach          #+#    #+#              #
-#    Updated: 2023/01/24 06:04:03 by slahrach         ###   ########.fr        #
+#    Updated: 2023/01/24 07:06:28 by slahrach         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = cub
+NAME = cub3D
 
 LIB = libft/libft.a
 
@@ -30,19 +30,22 @@ all : ${NAME}
 
 ${NAME} : ${OBJS}
 	Make -C ${LIBFT}
-	${CC} ${OBJS} ${LIB} -lmlx -framework OpenGL -framework AppKit -o ${NAME}
+	@ ${CC} ${CFLAGS} ${OBJS} ${LIB} ${CLINKS} -o ${NAME}
+	@ echo "cub3D ready"
 
 clean :
 	Make clean -C ${LIBFT}
-	rm -f ${OBJS}
+	@rm -f ${OBJS}
+	@ echo "obj files removed"
 
 fclean : clean
 	Make fclean -C ${LIBFT}
-	rm -f ${NAME}
+	@rm -f ${NAME}
+	@ echo "executable removed"
 
 re : fclean all
 
 %.o : %.c
-	${CC}  -Imlx -c $<
+	@ ${CC} ${CFLAGS} -Imlx -c $<
 
 .PHONY: clean all fclean re bonus

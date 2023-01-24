@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:45:25 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/24 06:42:42 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/24 07:09:18 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 
 void	init_window(t_config *config)
 {
-	void	*img;
-	int		width;
-	int		height;
-
 	config->data_mlx->mlx = mlx_init();
 	config->data_mlx->mlx_win = mlx_new_window(config->data_mlx->mlx, X, Y,
 			"cub3D");
@@ -76,11 +72,6 @@ static void	draw_walls(t_config *config)
 
 void	draw_map(t_config *config)
 {
-	unsigned int	color;
-	int				height;
-	int				ceil;
-	int				floor;
-
 	config->c = rgb_to_hex(config->c_color);
 	config->f = rgb_to_hex(config->f_color);
 	mlx_clear_window(config->data_mlx->mlx, config->data_mlx->mlx_win);

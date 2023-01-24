@@ -1,6 +1,5 @@
-
 C         204,229,255
-WE textures/pink.xpm
+WE ./textures/pink.xpm
 F  128,129,128     
 
 EA                  textures/yellow.xpm

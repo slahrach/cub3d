@@ -25,19 +25,19 @@ AR = ar -rcs
 all: ${NAME}
 
 ${NAME} : ${OBJS}
-	${AR} ${NAME} ${OBJS}
+	@ ${AR} ${NAME} ${OBJS}
 
 bonus : ${OJBS_BONUS}
-	${AR} ${NAME} ${OJBS_BONUS}
+	@ ${AR} ${NAME} ${OJBS_BONUS}
 clean :
-	rm -f ${OBJS} ${OJBS_BONUS}
+	@ rm -f ${OBJS} ${OJBS_BONUS}
 
 fclean : clean
-	rm -f ${NAME}
+	@ rm -f ${NAME}
 
 re : fclean all bonus
 
 %.o : %.c
-	${CC} ${CFLAGS} -c $<
+	@ ${CC} ${CFLAGS} -c $<
 
 .PHONY: clean all fclean re bonus

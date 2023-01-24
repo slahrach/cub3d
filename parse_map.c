@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 08:40:19 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/24 06:47:41 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/24 07:12:27 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 void	ft_check_1(char c, t_config *config)
 {
 	if (c != '1' && c != ' ')
+	{
+		config->c = 0;
 		ft_handle_error("Map must be surrounded by walls");
+	}
 }
 
 void	ft_check_chars(char c, t_config *config)
@@ -33,8 +36,8 @@ void	ft_check_chars(char c, t_config *config)
 
 void	check_surrounding(t_config *config)
 {
-	int	i;
-	int	j;
+	int		i;
+	size_t	j;
 
 	i = -1;
 	while (config->map[++i])

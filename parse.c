@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 04:26:46 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/24 04:27:36 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/24 06:52:18 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	ft_handle_scene_file(t_config *config, char *path)
 	char	*extension;
 	char	*map;
 
-	extension = ft_strchr(path, '.');
+	extension = ft_strrchr(path, '.');
 	if (extension && !ft_strcmp(extension, ".cub"))
 	{
 		file = open(path, O_RDONLY);

@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 08:51:51 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/23 09:10:44 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/24 07:07:07 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ unsigned int	rgb_to_hex(char	*color)
 void	ft_strmapi_(char const *s,
 	void (*f)(char, t_config *), t_config *config)
 {
-	char			*str;
 	unsigned int	i;
 	size_t			l;
 

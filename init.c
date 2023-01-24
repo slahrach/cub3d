@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 06:27:00 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/24 06:48:22 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/01/24 07:10:00 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ static void	ft_init_player_info(t_config *config, int i, int j)
 
 void	ft_player_info(t_config *config)
 {
-	int	i;
-	int	j;
+	size_t	i;
+	int		j;
 
 	j = 0;
 	while (j < config->map_len)
